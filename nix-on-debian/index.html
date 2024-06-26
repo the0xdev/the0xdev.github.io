@@ -1,0 +1,76 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><title>Nix on Debian | I.M Blogging</title>
+<link rel=stylesheet href=/css/main.min.6bc243a11638307e46577feee7c88b64b7fcb6fc3e36661af2539d3410fa4824.css integrity="sha256-a8JDoRY4MH5GV3/u58iLZLf8tvw+NmYa8lOdNBD6SCQ=" crossorigin=anonymous></head><body><header><a href=/><h1>I.M Blogging</h1></a></header><main><h2>Nix on Debian</h2><time datetime=2024-05-04>4 May, 2024</time><p>A guide on the best way to use the <a href=https://nixos.org/>Nix</a> package
+manager on <a href=https://www.debian.org/>Debian</a>.</p><h2 id=nix>Nix?</h2><p>If you haven&rsquo;t heard, <a href=https://nixos.org/>NixOS</a> is a declarative and
+reproducible Linux distro that prides itself on extreme stability while also
+maintaining close to bleeding edge packaging. Its got a whole ecosystem of
+components capable of doing some really amazing stuff. While all of this is
+great, one of the coolest parts of Nix is the over 100,000 packages that it has
+available through Nixpkgs. The largest by any degree.</p><figure><a href=https://repology.org/repositories/statistics/total><img src=/nix-on-debian/map_repo_size_fresh.svg alt="repology stats of package repositories"></a></figure><p>The best part, the package manager can be used on unrelated
+distros. Allowing almost any Linux system access to
+<a href=https://github.com/nixos/nixpkgs>Nixpkgs</a> trivially.</p><h2 id=why-debian>Why Debian?</h2><p>Cause I ❤️ Debian.</p><h2 id=the-setup>The Setup</h2><p>For this guide/tutorial I&rsquo;m going to be using a Debian 12 (bookworm) system to
+install Nix onto, though anything since 11 should work fine. If you&rsquo;re using a
+Debian based system all these steps should also work.</p><h2 id=installation>Installation</h2><p>There are two main ways to install Nix. First you could use the native Debian
+package, the second would be the official install script. I&rsquo;ll be going over the
+native package since I think that&rsquo;s the best way to get Nix on Debian.</p><h3 id=debian-nix>Debian Nix</h3><p>Debian actually packages <a href=https://packages.debian.org/bookworm/nix-bin>Nix</a>
+(since bullseye) in it&rsquo;s stable branch making it easy to install the
+binaries though regular old <code>apt</code>. Though I do recommend using the
+<a href=https://packages.debian.org/bookworm/nix-setup-systemd>nix-setup-systemd</a>
+package, which does a lot of the heavy lifting automatically.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>sudo apt install nix-setup-systemd
+</span></span></code></pre></div><p>Now that Nix is on your system you&rsquo;ve got to add yourself to the <code>nix-users</code>
+group to be able to interact with the package manager.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>sudo usermod -aG nix-users <span style=color:#66d9ef>$(</span>whoami<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><p>After you&rsquo;ve added yourself to <code>nix-users</code> make sure to login again for the
+changes to take affect (<code>sudo su $(whoami)</code>). Then you have to add a channel
+that Nix will pull its packages from. The easiest one to use is
+nixpkgs-unstable.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>nix-channel --update
+</span></span></code></pre></div><p>Finally add <code>~/.nix-profile/bin</code> to the <code>PATH</code>, and add <code>~/.nix-profile/share</code>
+to <code>XDG_DATA_DIRS</code> if you want your desktop environment to be able to find
+anything that you install. I recommend doing this in your <code>~/.profile</code>, but
+<code>~/.bashrc</code> or <code>~/.zshrc</code> also work. Below is what I use to make sure <code>PATH</code> and
+<code>XDG_DATA_DIRS</code> are set on my system.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e>### set PATH so it includes user&#39;s nix bin if it exists</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -d <span style=color:#e6db74>&#34;</span>$HOME<span style=color:#e6db74>/.nix-profile/bin&#34;</span> <span style=color:#f92672>]</span> ; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    PATH<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$HOME<span style=color:#e6db74>/.nix-profile/bin:</span>$PATH<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### set XDG_DATA_DIR so it includes user&#39;s nix share if it exists</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -d <span style=color:#e6db74>&#34;</span>$HOME<span style=color:#e6db74>/.nix-profile/share&#34;</span> <span style=color:#f92672>]</span> ; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    XDG_DATA_DIRS<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$HOME<span style=color:#e6db74>/.nix-profile/share:</span>$XDG_DATA_DIRS<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span></code></pre></div><p>After all of that you can pretty much install anything from Nixpkgs.</p><h3 id=further-configuration>Further Configuration</h3><p>Nix does have extra features and config options that are not enabled by
+default. The most popular ones to change are allowing non-free packages, and
+new CLI along with flakes.</p><h4 id=non-free-packages>non-free packages</h4><p>Nix does not allow you to install the non-free packages from its archive unless
+you explicitly tell it to. There are different ways to do this depending on
+whether you want it temporally, or allowing non-free by default. adding <code>{ allowUnfree = true; }</code> to you&rsquo;re Nixpkg config (<code>~/.config/nixpkgs/config.nix</code>)
+is the simplest way to enable non-free packages. Though if you only need it for
+a temporary shell or a build just <code>export NIXPKGS_ALLOW_UNFREE=1</code> when you need
+to use non-free software.</p><h4 id=experimental-features>experimental features</h4><p>Nix have some features that are still in the works which is why they are not on
+by default. Nix will check <code>~/.config/nix/nix.conf</code> for which features you&rsquo;ve
+enabled, and you probably just want <code>nix-command</code> and <code>flakes</code> to start off with.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>experimental-features <span style=color:#f92672>=</span> nix-command flakes
+</span></span></code></pre></div><blockquote><p>Both <code>~/.config/nixpkgs/config.nix</code> and <code>~/.config/nix/nix.conf</code> may not be
+created by default. If that is the case, create the appropriate directory and
+files.</p></blockquote><h2 id=basic-usage>Basic usage</h2><p>Now that you have a working Nix install, you can use it to easily and safely
+install tens of thousands of new packages onto your machine. For installing a
+package just find it on <a href=https://search.nixos.org/packages>https://search.nixos.org/packages</a> which
+will show you the package name and some commands to install, though they
+generally look like this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>nix-env -iA nixpkgs.PACKAGENAME
+</span></span></code></pre></div><p>To uninstall packages just use <code>nix-env -e</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>nix-env -e PACKAGENAME
+</span></span></code></pre></div><h3 id=updating>Updating</h3><p>First Nix needs to update the channel(s) that you&rsquo;ve added with <code>nix-channel --update</code>, after which you can call <code>nix-env -u</code> to update everything, or
+<code>nix-env -u PACKAGENAME</code> to update a specific package.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>nix-channel --update <span style=color:#f92672>&amp;&amp;</span> nix-env -u
+</span></span></code></pre></div><p>I also recommend that you use <code>nix-collect-garbage</code> when you update, as Nix
+keeps each generation of packages that you&rsquo;ve installed/updated/uninstalled, so
+there is always a working version of them to rollback to. This eats up a lot of
+space, especially if you make a lot of changes to the system in quick succession.</p><p>I usually run something like this when I update my packages.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>nix-channel --update <span style=color:#f92672>&amp;&amp;</span> nix-env -u <span style=color:#f92672>&amp;&amp;</span> nix-collect-garbage -d
+</span></span></code></pre></div><h2 id=broken-things>Broken Things</h2><p>While Nix will add tonnes of stable packages to you system with ease,
+there is one downside to this all. GUI applications are more of a crap
+shoot of if they&rsquo;ll work, while anything with a CLI has worked 100% of the time
+I&rsquo;ve tried. This is something that I&rsquo;ve still working on, so expect an update
+when I find out how to fix this. In the mean time I recommend using
+<a href=https://www.flatpak.org/>flatpak</a> as that&rsquo;s how I usually get GUI apps.</p><h2 id=tl-dr>TL-DR</h2><p>Run this to install.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>sudo apt install -y nix-setup-systemd <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>sudo usermod -aG nix-users <span style=color:#66d9ef>$(</span>whoami<span style=color:#66d9ef>)</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>newgrp nix-users 
+</span></span></code></pre></div><p>Then run this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>nix-channel --update <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>newgrp -
+</span></span></code></pre></div><p>Add <code>~/.nix-profile/bin</code> to your <code>PATH</code> and <code>~/.nix-profile/share</code> to
+<code>XDG_DATA_DIRS</code>, use <code>nix-env -iA nixpkgs.PACKAGENAME</code> to install stuff that you
+find on <a href=https://search.nixos.org/packages>https://search.nixos.org/packages</a>.</p><hr><div><div>Tags:</div><ul><li><a href=/tags/nix/>Nix</a></li><li><a href=/tags/debian/>Debian</a></li></ul></div></main><hr><footer><p>Copyright © 2024-2025 by Imran Mustafa. Licensed under <a href=https://creativecommons.org/licenses/by-sa/4.0/>CC BY-SA 4.0</a>, unless stated otherwise.</p></footer></body></html>

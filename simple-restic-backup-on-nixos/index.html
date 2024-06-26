@@ -1,0 +1,150 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><title>Simple Restic Backups on Nixos | I.M Blogging</title>
+<link rel=stylesheet href=/css/main.min.6bc243a11638307e46577feee7c88b64b7fcb6fc3e36661af2539d3410fa4824.css integrity="sha256-a8JDoRY4MH5GV3/u58iLZLf8tvw+NmYa8lOdNBD6SCQ=" crossorigin=anonymous></head><body><header><a href=/><h1>I.M Blogging</h1></a></header><main><h2>Simple Restic Backups on Nixos</h2><time datetime=2024-11-16>16 November, 2024</time><p>When it comes to all the things that <a href=https://nixos.org/>nix</a> lets you do, defining complex services
+deterministically in text, is probably the most powerful. For example I have nix
+manage all of my system backup jobs. Which could be handled with a shell
+script, but can be so much more extensible when configured entirely within nix. I
+hope showing off how I manage this can help you further understand what you can
+do with nix, especially with configuring services.</p><p>This post will go over how I use nix to manage <a href=https://restic.net/>restic</a>, which is my preferred
+backup system. Nix supports other programs, which you can lookup at
+<a href=https://search.nixos.org/options>https://search.nixos.org/options</a> or
+<a href=https://nixos.org/manual/nixos/stable/options>https://nixos.org/manual/nixos/stable/options</a> to see there configuration
+options.</p><div id=outline-container-headline-1 class=outline-3><h3 id=headline-1>The Important Config Options</h3><div id=outline-text-headline-1 class=outline-text-3><p>There are (at time of writing) 22 configuration options for the restic backup
+service in nix. Though you don't need to set all of them to get restic working. I'll
+go over the most important ones that need to be set and what they mean.</p><div id=outline-container-headline-2 class=outline-4><h4 id=headline-2>what's <code class=verbatim>&lt;name></code></h4><div id=outline-text-headline-2 class=outline-text-4><p>The restic service in nix is setup to have separate configuration options for
+each backup job that you set. <code class=verbatim>&lt;name></code> is the placeholder that the documentation
+uses, and can be changed to whatever you think best describes that backup. For example.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span>my-remote-backup <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  thing <span style=color:#f92672>=</span> True;
+</span></span><span style=display:flex><span>}; <span style=color:#75715e># Settings aren&#39;t shared between each backup</span>
+</span></span><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span>my-other-remote-backup <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  thing <span style=color:#f92672>=</span> False;
+</span></span><span style=display:flex><span>}; They can be set diffrently
+</span></span><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span>my-local-backup <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  other-things <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>};</span></span></code></pre></div></div><p>Each of these would be a separate systemd service with its own wrapper and
+timer<sup class=footnote-reference><a id=footnote-reference-1 href=#footnote-1>1</a></sup>. This is quite handy when managing multiple backups which each need
+to be configured differently.</p></div></div><div id=outline-container-headline-3 class=outline-4><h4 id=headline-3><code class=verbatim>paths</code> and <code class=verbatim>exclude</code></h4><div id=outline-text-headline-3 class=outline-text-4><p>paths is a simple list of strings that represent the paths that you want restic
+to backup. While exclude will tell restic what you don't want included in the
+final backup. Useful for caches, a steam library and anything you wouldn't want
+in the final snapshot.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>paths <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;/home/&#34;</span> <span style=color:#75715e># backup all user home directories</span>
+</span></span><span style=display:flex><span>];
+</span></span><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>exclude <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;/home/*/.cache&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;/home/*/somereallybigfile/youdon&#39;tneed/backedup&#34;</span>
+</span></span><span style=display:flex><span>];</span></span></code></pre></div></div></div></div><div id=outline-container-headline-4 class=outline-4><h4 id=headline-4><code class=verbatim>initialize</code></h4><div id=outline-text-headline-4 class=outline-text-4><p>This is a boolean that when set to true will allow the restic service to
+initialize repositories. As by default the backup job will fail if it does not
+find a preexisting repository at the set URL, which will require you to setup
+each repository manually before this service will work.</p><p>I like letting restic deal with initialization on its own, and I would recommend
+this to you as well.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>initialize <span style=color:#f92672>=</span> True;</span></span></code></pre></div></div></div></div><div id=outline-container-headline-5 class=outline-4><h4 id=headline-5><code class=verbatim>pruneOpts</code></h4><div id=outline-text-headline-5 class=outline-text-4><p>This one doesn't absolutely need to be set but I recommend some pruning of your
+repositories just to clean up older and less important snapshots. It's simple to
+define as well, just pass each prune options as a string in a list. The example
+below is just what I use, you are free to change things around to suit your
+needs.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>pruneOpts <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;--keep-daily 7&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;--keep-weekly 5&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;--keep-monthly 12&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;--keep-yearly 10&#34;</span>
+</span></span><span style=display:flex><span>];</span></span></code></pre></div></div></div></div><div id=outline-container-headline-6 class=outline-4><h4 id=headline-6><code class=verbatim>timerConfig</code></h4><div id=outline-text-headline-6 class=outline-text-4><p>Having your backups occur regularly is extremely important, and <code class=verbatim>timerconfig</code> is
+what defines the systemd unit that triggers the backup you defined. The options
+are the standard <a href=https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html><code class=verbatim>system.timer(5)</code></a> that systemd uses. So setting a regular
+backup is as simple as defining <code class=verbatim>OnCalendar</code> to "daily"/"weekly" or whatever
+else you prefer. <code class=verbatim>Persistent</code> Should also be set to true so your machine can
+catch up on backups That it's missed while powered off.</p><p>Important note, if the computer uses wifi to connect to the internet (e.g
+laptop). The backup will fail at boot due to the wifi not being connected at
+that point. It'll work normally after it connects, or if it had Ethernet at
+boot. The simplest workaround I've found is setting <code class=verbatim>OnBootSec</code> to a minute or 2
+so I can log in. After which the wifi connection will be working, and the
+backup will occur just fine.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>timerConfig <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>          <span style=color:#75715e># OnBootSec = &#34;3m&#34;; # uncomment this this line if your on wifi</span>
+</span></span><span style=display:flex><span>          OnCalendar <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;daily&#34;</span>;
+</span></span><span style=display:flex><span>          Persistent <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>};</span></span></code></pre></div></div></div></div><div id=outline-container-headline-7 class=outline-4><h4 id=headline-7><code class=verbatim>passwordFile</code></h4><div id=outline-text-headline-7 class=outline-text-4><p>If you encrypt your backup (which you should) this is where you would tell nix
+where the password would be stored. I would recommend using <a href=https://github.com/Mic92/sops-nix>sops-nix</a> when it
+comes to managing secrets. Though you could also just hardcore a path and place
+a file there manually if you don't want to setup sops.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>passwordFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>secrets<span style=color:#f92672>.</span>restic-passphrase<span style=color:#f92672>.</span>path;
+</span></span><span style=display:flex><span><span style=color:#75715e># or</span>
+</span></span><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>passwordFile <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;/home/user/.restic-password.txt&#34;</span>;</span></span></code></pre></div></div></div></div><div id=outline-container-headline-8 class=outline-4><h4 id=headline-8><code class=verbatim>repoFile</code> / <code class=verbatim>environmentFile</code></h4><div id=outline-text-headline-8 class=outline-text-4><p>The <code class=verbatim>repoFile</code> defines the URL<sup class=footnote-reference><a id=footnote-reference-2 href=#footnote-2>2</a></sup> that the repository is located at. While the
+<code class=verbatim>environmentFile</code> defines the environment variables<sup class=footnote-reference><a id=footnote-reference-3 href=#footnote-3>3</a></sup> needed to access the
+repo. These would be the best way to define repo locations, though it is possible to
+use <code class=verbatim>rcloneConfigFile</code> if you would prefer to use that back end.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>environmentFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;environmentFile&#34;</span><span style=color:#f92672>.</span>path;
+</span></span><span style=display:flex><span>services<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>backups<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>repositoryFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;repositoryFile&#34;</span><span style=color:#f92672>.</span>path;</span></span></code></pre></div></div><p>again you could just make these files and then hard code the paths, but again
+sops-nix lets you create files that contain your secrets with <a href="https://github.com/Mic92/sops-nix?tab=readme-ov-file#templates">templates</a>. So I
+really would recommend it or a similar system when encoding secrets in a git repo.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span><span style=color:#75715e># Example sops.templates</span>
+</span></span><span style=display:flex><span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;repositoryfile&#34;</span><span style=color:#f92672>.</span>content <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  s3:s3.example.com/</span><span style=color:#e6db74>${</span>config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>placeholder<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;bucket&#34;</span><span style=color:#e6db74>}</span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#39;&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;accessfile&#34;</span><span style=color:#f92672>.</span>content <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  AWS_ACCESS_KEY_ID=&#34;</span><span style=color:#e6db74>${</span>config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>placeholder<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;keyid&#34;</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  AWS_SECRET_ACCESS_KEY=&#34;</span><span style=color:#e6db74>${</span>config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>placeholder<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;accesskey&#34;</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#39;&#39;</span>;</span></span></code></pre></div></div></div></div></div></div><div id=outline-container-headline-9 class=outline-3><h3 id=headline-9>My Setup</h3><div id=outline-text-headline-9 class=outline-text-3><p>This is my personal setup from my own flake, which is meant to be imported into
+your system config after which you enable the option (e.g <code>restic.enable
+= true</code>). You can use this as a base for your own backup setting, or
+a template to what you will implement in your own system config.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span><span style=color:#75715e># SPDX-FileCopyrightText: 2024 Imran Mustafa &lt;imran@imranmustafa.net&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># SPDX-License-Identifier: GPL-3.0-or-later</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  pkgs<span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>  lib<span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>  config<span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>...</span> <span style=color:#75715e># these are the funciton package imports</span>
+</span></span><span style=display:flex><span>}: {
+</span></span><span style=display:flex><span>  options <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    restic<span style=color:#f92672>.</span>enable <span style=color:#f92672>=</span> lib<span style=color:#f92672>.</span>mkEnableOption <span style=color:#e6db74>&#34;restic&#34;</span>; <span style=color:#75715e># making this easy to toggle with an option</span>
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>  config <span style=color:#f92672>=</span> lib<span style=color:#f92672>.</span>mkIf config<span style=color:#f92672>.</span>restic<span style=color:#f92672>.</span>enable {
+</span></span><span style=display:flex><span>    services<span style=color:#f92672>.</span>restic <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>      backups <span style=color:#f92672>=</span> <span style=color:#66d9ef>let</span>
+</span></span><span style=display:flex><span>        initialize <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        exclude <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;/home/*/.cache&#34;</span>
+</span></span><span style=display:flex><span>        ];
+</span></span><span style=display:flex><span>        paths <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;/home&#34;</span>
+</span></span><span style=display:flex><span>        ];
+</span></span><span style=display:flex><span>        checkOpts <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;--with-cache&#34;</span> <span style=color:#75715e># just to make checks faster</span>
+</span></span><span style=display:flex><span>        ];
+</span></span><span style=display:flex><span>        extraBackupArgs <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>        ];
+</span></span><span style=display:flex><span>        extraOptions <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>        ];
+</span></span><span style=display:flex><span>        passwordFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>secrets<span style=color:#f92672>.</span>restic-passphrase<span style=color:#f92672>.</span>path;
+</span></span><span style=display:flex><span>        pruneOpts <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;--keep-daily 7&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;--keep-weekly 5&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;--keep-monthly 12&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;--keep-yearly 10&#34;</span>
+</span></span><span style=display:flex><span>        ];
+</span></span><span style=display:flex><span>        timerConfig <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>          OnBootSec <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;3m&#34;</span>;
+</span></span><span style=display:flex><span>          OnCalendar <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;daily&#34;</span>;
+</span></span><span style=display:flex><span>          Persistent <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>in</span> {
+</span></span><span style=display:flex><span>        backup <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>          <span style=color:#66d9ef>inherit</span> initialize exclude paths timerConfig checkOpts extraBackupArgs extraOptions passwordFile pruneOpts;
+</span></span><span style=display:flex><span>          <span style=color:#75715e># using inherit lets you share common options between backups and make everything cleaner</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          environmentFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;environmentFile&#34;</span><span style=color:#f92672>.</span>path;
+</span></span><span style=display:flex><span>          repositoryFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;repositoryFile&#34;</span><span style=color:#f92672>.</span>path;
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>      };
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>}</span></span></code></pre></div></div><p>One thing that you might not get is the let statement that comes after
+<code class=verbatim>backups</code> . It is simply there to define common options that I would normally
+want all my backups to share. This makes it easy to share variables between
+multiple backups without having to redefine the same values for each. For
+example if I wanted to set up another backup job to another location I could
+just define this.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>other <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>          <span style=color:#66d9ef>inherit</span> initialize exclude paths timerConfig checkOpts extraBackupArgs extraOptions passwordFile pruneOpts;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          environmentFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;other-environmentFile&#34;</span><span style=color:#f92672>.</span>path;
+</span></span><span style=display:flex><span>          repositoryFile <span style=color:#f92672>=</span> config<span style=color:#f92672>.</span>sops<span style=color:#f92672>.</span>templates<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;other-repositoryFile&#34;</span><span style=color:#f92672>.</span>path;
+</span></span><span style=display:flex><span>};</span></span></code></pre></div></div><p>Another neat thing that nix does is it creates a wrapper for each of the backups
+you setup (I.e <code>restic-&lt;name></code>) that already have the environment values
+set. Making it simple to interact with the repos.</p><p>This should be enough to get you going on the path to writing your own backup
+service for your Nixos systems. As well as showing off the ways that nix can be
+more extensible while being simpler to implement then more conventional
+methods of implementing a automated backup.</p></div></div><div class=footnotes><hr class=footnotes-separatator><div class=footnote-definitions><div class=footnote-definition><sup id=footnote-1><a href=#footnote-reference-1>1</a></sup><div class=footnote-body><p>If set.</p></div></div><div class=footnote-definition><sup id=footnote-2><a href=#footnote-reference-2>2</a></sup><div class=footnote-body><p>URL = scheme ":" ["//" authority] path ["?" query] ["#" fragment]</p></div></div><div class=footnote-definition><sup id=footnote-3><a href=#footnote-reference-3>3</a></sup><div class=footnote-body><p>Formatted in accordance with <a href=https://manpages.debian.org/stretch/systemd/systemd.exec.5.en.html>systemd.exec(5)</a></p></div></div></div></div><hr><div><div>Tags:</div><ul><li><a href=/tags/nix/>Nix,</a></li><li><a href=/tags/restic/>Restic</a></li></ul></div></main><hr><footer><p>Copyright © 2024-2025 by Imran Mustafa. Licensed under <a href=https://creativecommons.org/licenses/by-sa/4.0/>CC BY-SA 4.0</a>, unless stated otherwise.</p></footer></body></html>

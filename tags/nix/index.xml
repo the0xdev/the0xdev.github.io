@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nix, on I.M Blogging</title><link>https://imranmustafa.net/tags/nix/</link><description>Recent content in Nix, on I.M Blogging</description><generator>Hugo</generator><language>en</language><managingEditor>imran@imranmustafa.net (Imran Mustafa)</managingEditor><webMaster>imran@imranmustafa.net (Imran Mustafa)</webMaster><lastBuildDate>Sat, 07 Dec 2024 17:34:52 -0500</lastBuildDate><atom:link href="https://imranmustafa.net/tags/nix/index.xml" rel="self" type="application/rss+xml"/><item><title>Simplifying Syncthing With Nix</title><link>https://imranmustafa.net/simplifying-syncthing-with-nix/</link><pubDate>Sat, 07 Dec 2024 17:34:52 -0500</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/simplifying-syncthing-with-nix/</guid><description>&lt;p>&lt;a href="https://syncthing.net/">Syncthing&lt;/a> is a wonderful tool that I use to sync folders quickly and securely
+across my devices without having to use a proprietary tool like &lt;a href="https://www.dropbox.com/">Dropbox&lt;/a>. You
+can use this tool on almost any system, and I definitely would recommend it to
+anyone who wants to sync files across their devices due to its ease of use and
+security.&lt;/p>
+&lt;p>
+This post doesn&amp;#39;t go over how you would use Syncthing normally as you would on any
+other distro, instead showing off how nix can be used to manage Syncthing. Which
+can be especially great when you need to manage a lot of devices or folders. If you
+want a standard guide I would recommend Syncthing&amp;#39;s great &lt;a href="https://docs.syncthing.net/intro/getting-started.html">guide&lt;/a> and
+&lt;a href="https://docs.syncthing.net/">documentation&lt;/a>.&lt;/p></description></item><item><title>Simple Restic Backups on Nixos</title><link>https://imranmustafa.net/simple-restic-backup-on-nixos/</link><pubDate>Sat, 16 Nov 2024 16:32:42 -0500</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/simple-restic-backup-on-nixos/</guid><description>&lt;p>When it comes to all the things that &lt;a href="https://nixos.org/">nix&lt;/a> lets you do, defining complex services
+deterministically in text, is probably the most powerful. For example I have nix
+manage all of my system backup jobs. Which could be handled with a shell
+script, but can be so much more extensible when configured entirely within nix. I
+hope showing off how I manage this can help you further understand what you can
+do with nix, especially with configuring services.&lt;/p></description></item></channel></rss>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>'Reuse on I.M Blogging</title><link>https://imranmustafa.net/tags/reuse/</link><description>Recent content in 'Reuse on I.M Blogging</description><generator>Hugo</generator><language>en</language><managingEditor>imran@imranmustafa.net (Imran Mustafa)</managingEditor><webMaster>imran@imranmustafa.net (Imran Mustafa)</webMaster><lastBuildDate>Fri, 09 May 2025 00:00:00 -0400</lastBuildDate><atom:link href="https://imranmustafa.net/tags/reuse/index.xml" rel="self" type="application/rss+xml"/><item><title>Using Reuse</title><link>https://imranmustafa.net/using-reuse/</link><pubDate>Fri, 09 May 2025 00:00:00 -0400</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/using-reuse/</guid><description>&lt;p>&lt;a href="https://reuse.software/">reuse&lt;/a> is a software tool that can annotate your git repos with copyright
+information, download licences, and automatically check for compliance with the
+&lt;a href="https://reuse.software/spec-3.3/">reuse standard&lt;/a>. All from the command line. Leaving you with more time to work on
+what actually matters instead of the tedium of copyright law.&lt;/p>
+&lt;div id="outline-container-headline-1" class="outline-3">
+&lt;h3 id="headline-1">
+Installation
+&lt;/h3>
+&lt;div id="outline-text-headline-1" class="outline-text-3">
+&lt;p>reuse is widely packaged&lt;sup class="footnote-reference">&lt;a id="footnote-reference-1" href="#footnote-1">1&lt;/a>&lt;/sup> so its likely already present in your distros
+repo. Making installation through your preferred package manager simple.&lt;/p></description></item></channel></rss>

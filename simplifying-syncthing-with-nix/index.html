@@ -1,0 +1,135 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><title>Simplifying Syncthing With Nix | I.M Blogging</title>
+<link rel=stylesheet href=/css/main.min.6bc243a11638307e46577feee7c88b64b7fcb6fc3e36661af2539d3410fa4824.css integrity="sha256-a8JDoRY4MH5GV3/u58iLZLf8tvw+NmYa8lOdNBD6SCQ=" crossorigin=anonymous></head><body><header><a href=/><h1>I.M Blogging</h1></a></header><main><h2>Simplifying Syncthing With Nix</h2><time datetime=2024-12-07>7 December, 2024</time><p><a href=https://syncthing.net/>Syncthing</a> is a wonderful tool that I use to sync folders quickly and securely
+across my devices without having to use a proprietary tool like <a href=https://www.dropbox.com/>Dropbox</a>. You
+can use this tool on almost any system, and I definitely would recommend it to
+anyone who wants to sync files across their devices due to its ease of use and
+security.</p><p>This post doesn't go over how you would use Syncthing normally as you would on any
+other distro, instead showing off how nix can be used to manage Syncthing. Which
+can be especially great when you need to manage a lot of devices or folders. If you
+want a standard guide I would recommend Syncthing's great <a href=https://docs.syncthing.net/intro/getting-started.html>guide</a> and
+<a href=https://docs.syncthing.net/>documentation</a>.</p><div id=outline-container-headline-1 class=outline-3><h3 id=headline-1>The Issue</h3><div id=outline-text-headline-1 class=outline-text-3><p>Something that may come up as a hurdle with Syncthing is when dealing with
+networks of more then just a few devices/folders (i.e more then 3). As adding new
+devices or managing shared folders, becomes far more tedious as each individual
+machine will need to be configured to manage the network as a whole<sup class=footnote-reference><a id=footnote-reference-1 href=#footnote-1>1</a></sup>.</p><p>For example, if you had five devices that you wanted to link together. After
+installing and setting up Syncthing on each machine, device one will need to
+connect device two. Then device two will need to accept the connection from
+device one, this will be repeated between each device pair if you want all
+devices to connect to each other. After each device is connected, sharing a
+folder will require a similar process of creating, configuring, and sharing
+with all relevant devices. Then accepting the folders, and configuring
+the there settings on the new devices as well.</p><p>This can be very annoying when dealing with large number of devices or
+folders that need to be connected together. While there are methods within
+Syncthing itself, such as <a href=https://docs.syncthing.net/users/config.html#config-option-device.autoacceptfolders>autoAcceptFolders</a>. I feel that the nix method
+I will show makes this all so much easier.</p></div></div><div id=outline-container-headline-2 class=outline-3><h3 id=headline-2>With Nix</h3><div id=outline-text-headline-2 class=outline-text-3><p>When you add in nix to this you get the ability to define all devices, and the
+folders that they share in one file. With changes reflected across all devices
+without the need to individually manage each devices' folders and settings.</p><p>This is done using the Syncthing service in nix, which has the options
+<code>services.syncthing.settings.devices</code> which lets you define
+all devices in the network and <code>services.syncthing.settings.folders</code>
+which defines folders. For example if you had three devices you could define
+them all in the service like so.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>  services<span style=color:#f92672>.</span>syncthing<span style=color:#f92672>.</span>settings<span style=color:#f92672>.</span>devices <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device1&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;}; 
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device2&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;};
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device3&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;};
+</span></span><span style=display:flex><span>          };</span></span></code></pre></div></div><p>With each device getting a name, and their device ID set. You can then use
+these devices when defining folders. For example.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>  services<span style=color:#f92672>.</span>syncthing<span style=color:#f92672>.</span>settings<span style=color:#f92672>.</span>folders <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;/home/youruser/sync&#34;</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>                  devices <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#34;device1&#34;</span> <span style=color:#e6db74>&#34;device2&#34;</span> <span style=color:#e6db74>&#34;device3&#34;</span>]
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>          };</span></span></code></pre></div></div><p>This is a pretty simple folder config, but you can already see how much easier
+it will be managing devices and folders with everything defined in one file. As
+any changes to which devices share which folders will be automatically made with
+and devices that use this service configuration. Adding devices is simply done
+by extending <code>services.syncthing.settings.devices</code> and then adding them to the
+respective folders.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>  services<span style=color:#f92672>.</span>syncthing<span style=color:#f92672>.</span>settings<span style=color:#f92672>.</span>devices <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device1&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;}; 
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device2&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;};
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device3&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;};
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device4&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;};
+</span></span><span style=display:flex><span>          };
+</span></span><span style=display:flex><span>  services<span style=color:#f92672>.</span>syncthing<span style=color:#f92672>.</span>settings<span style=color:#f92672>.</span>folders <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;/home/youruser/sync&#34;</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>              devices <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#34;device1&#34;</span> <span style=color:#e6db74>&#34;device2&#34;</span> <span style=color:#e6db74>&#34;device3&#34;</span> <span style=color:#e6db74>&#34;device4&#34;</span>]
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>          };</span></span></code></pre></div></div><p>That's it. Just update the config the machines are using and then they will sort
+out the rest.</p><div id=outline-container-headline-3 class=outline-4><h4 id=headline-3>Adding non-nix hosts</h4><div id=outline-text-headline-3 class=outline-text-4><p>Now this is great for managing Syncthing between NixOS hosts, but you may be
+wondering how to add non-NixOS host into your config. This is pretty simple, as
+adding the non-nix device ID to the devices list and then treating them the same
+as a NixOS host. Though you'll need to manually accept the connections and
+folders on the devices that aren't managed by nix.</p><div id=outline-container-headline-4 class=outline-5><h5 id=headline-4>Manual management</h5><div id=outline-text-headline-4 class=outline-text-5><p>If you want to have manual management of device connections and folders , set
+<code>overrideFolders</code>, and <code>overrideDevices</code> to <code>False</code>, along with
+<code>localAnnounceEnabled</code> set to <code>true</code>. This will allow you to manage the
+Syncthing service outside of the configuration set in the file. I don't
+recommend this but it is an option that you can take if it's what your most
+comfortable with.</p><p>Also to note, without both override options set to false changes that you make
+through the Syncthing UI will be reset after the system restarts.</p></div></div></div></div><div id=outline-container-headline-5 class=outline-4><h4 id=headline-5>Other Config Options</h4><div id=outline-text-headline-5 class=outline-text-4><p>While everything till this point will give you most of what you need to know,
+there are some extra options that you can configure to fine tune your personal
+setup.</p><div id=outline-container-headline-6 class=outline-5><h5 id=headline-6><code>services.syncthing.settings.options.urAccepted</code></h5><div id=outline-text-headline-6 class=outline-text-5><p>Syncthing reports anonymous usage data back to the development team, normally
+this would show a pop-up when you first access the web UI. While in NixOS you
+can declare your decision in the service itself. A negative number is a no, and
+a positive number is a yes. While 0 (the default) will prompt the software
+to ask you through the web UI as normal.</p></div></div><div id=outline-container-headline-7 class=outline-5><h5 id=headline-7><code>services.syncthing.settings.options.relaysEnabled</code></h5><div id=outline-text-headline-7 class=outline-text-5><p>The relay system in Syncthing is how devices on separate networks that normally
+wouldn't be able to connect with each other, interact. It's useful when you need
+your devices to connect even when they move to another location/network (i.e your
+laptop, or phone), or if some devices are just on disparate networks
+normally. Relaying is disabled by default, though setting
+<code>services.syncthing.settings.options.relaysEnabled</code> to <code>true</code> will allow the
+device to connect through the relay service provided by the Syncthing team.</p><p>It's possible to reconfigure the relay service that your network will make use
+of, helpful if you self-host a relay or use one from another
+provider<sup class=footnote-reference><a id=footnote-reference-2 href=#footnote-2>2</a></sup>. Though since I make use of the default relay service I'm not
+100% certain on how to set this up<sup class=footnote-reference><a id=footnote-reference-3 href=#footnote-3>3</a></sup>.</p></div></div><div id=outline-container-headline-8 class=outline-5><h5 id=headline-8><code>services.syncthing.settings.folders.&lt;name>.versioning</code></h5><div id=outline-text-headline-8 class=outline-text-5><p>Versioning is important as it offers some protection against deleting files by
+accident<sup class=footnote-reference><a id=footnote-reference-4 href=#footnote-4>4</a></sup>. To enable versioning on a folder set
+<code>services.syncthing.settings.folders.&lt;name>.versioning.type</code> to a supported
+versioning strategy<sup class=footnote-reference><a id=footnote-reference-5 href=#footnote-5>5</a></sup>. Then pass the arguments through
+<code>services.syncthing.settings.folders.&lt;name>.versioning.params</code> to override any
+default values you want<sup class=footnote-reference><a id=footnote-reference-5 href=#footnote-5>5</a></sup>. This is the example setup of a staggered folder
+in the nix docs.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>  services<span style=color:#f92672>.</span>syncthing<span style=color:#f92672>.</span>settings<span style=color:#f92672>.</span>folders<span style=color:#f92672>.</span><span style=color:#e6db74>&lt;name&gt;</span><span style=color:#f92672>.</span>versioning <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        type <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;staggered&#34;</span>;
+</span></span><span style=display:flex><span>        params <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>          fsPath <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;/syncthing/backup&#34;</span>;
+</span></span><span style=display:flex><span>          cleanInterval <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;3600&#34;</span>;
+</span></span><span style=display:flex><span>          maxAge <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;31536000&#34;</span>;
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>      };</span></span></code></pre></div></div></div></div></div></div></div></div><div id=outline-container-headline-9 class=outline-3><h3 id=headline-9>Basic Template</h3><div id=outline-text-headline-9 class=outline-text-3><p>Putting it all together you might have something like this for the service
+configuration.</p><div class="src src-nix"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>  <span style=color:#75715e># SPDX-FileCopyrightText: 2024 Imran Mustafa &lt;imran@imranmustafa.net&gt;</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>#</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># SPDX-License-Identifier: GPL-3.0-or-later</span>
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    pkgs<span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>    lib<span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>    config<span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>  }: {
+</span></span><span style=display:flex><span>    options <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>      syncthing<span style=color:#f92672>.</span>enable <span style=color:#f92672>=</span> lib<span style=color:#f92672>.</span>mkEnableOption <span style=color:#e6db74>&#34;Syncthing&#34;</span>;
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>    config <span style=color:#f92672>=</span> lib<span style=color:#f92672>.</span>mkIf config<span style=color:#f92672>.</span>syncthing<span style=color:#f92672>.</span>enable {
+</span></span><span style=display:flex><span>      services<span style=color:#f92672>.</span>syncthing <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        enable <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        dataDir <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;/home/YOUR_USER&#34;</span>;
+</span></span><span style=display:flex><span>        openDefaultPorts <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        settings <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>          options <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            urAccepted <span style=color:#f92672>=</span> <span style=color:#ae81ff>-1</span>;
+</span></span><span style=display:flex><span>            relaysEnabled <span style=color:#f92672>=</span> True;
+</span></span><span style=display:flex><span>          };
+</span></span><span style=display:flex><span>          devices <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device1&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;};
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;device2&#34;</span> <span style=color:#f92672>=</span> {id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&#34;</span>;};
+</span></span><span style=display:flex><span>          };
+</span></span><span style=display:flex><span>         folders <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;/home/YOUR_USER/sync&#34;</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>              devices <span style=color:#f92672>=</span> [device1 device2];
+</span></span><span style=display:flex><span>              versioning <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>                type <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;staggered&#34;</span>;
+</span></span><span style=display:flex><span>                params <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>                  fsPath <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;/syncthing/backup&#34;</span>;
+</span></span><span style=display:flex><span>                  cleanInterval <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;3600&#34;</span>;
+</span></span><span style=display:flex><span>                  maxAge <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;31536000&#34;</span>;
+</span></span><span style=display:flex><span>                };
+</span></span><span style=display:flex><span>              };
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>         };
+</span></span><span style=display:flex><span>      };
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>  }</span></span></code></pre></div></div></div></div><div id=outline-container-headline-10 class=outline-3><h3 id=headline-10>Footnotes</h3></div><div class=footnotes><hr class=footnotes-separatator><div class=footnote-definitions><div class=footnote-definition><sup id=footnote-1><a href=#footnote-reference-1>1</a></sup><div class=footnote-body><p>I'm assuming the network is maximally connected to show off the problem.</p></div></div><div class=footnote-definition><sup id=footnote-2><a href=#footnote-reference-2>2</a></sup><div class=footnote-body><p>A list of public relays is available at <a href=https://relays.syncthing.net/>https://relays.syncthing.net/</a>, <strong>These
+are not provided by the Syncthing team.</strong></p></div></div><div class=footnote-definition><sup id=footnote-3><a href=#footnote-reference-3>3</a></sup><div class=footnote-body><p>Sorry if you needed that information.</p></div></div><div class=footnote-definition><sup id=footnote-4><a href=#footnote-reference-4>4</a></sup><div class=footnote-body><p>Though this wouldn't count as a proper backup.</p></div></div><div class=footnote-definition><sup id=footnote-5><a href=#footnote-reference-5>5</a></sup><div class=footnote-body><p><a href=https://docs.syncthing.net/users/versioning.html>https://docs.syncthing.net/users/versioning.html</a></p></div></div></div></div><hr><div><div>Tags:</div><ul><li><a href=/tags/nix/>Nix,</a></li><li><a href=/tags/syncthing/>Syncthing</a></li></ul></div></main><hr><footer><p>Copyright © 2024-2025 by Imran Mustafa. Licensed under <a href=https://creativecommons.org/licenses/by-sa/4.0/>CC BY-SA 4.0</a>, unless stated otherwise.</p></footer></body></html>

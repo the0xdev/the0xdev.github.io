@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Distrobox, on I.M Blogging</title><link>https://imranmustafa.net/tags/distrobox/</link><description>Recent content in Distrobox, on I.M Blogging</description><generator>Hugo</generator><language>en</language><managingEditor>imran@imranmustafa.net (Imran Mustafa)</managingEditor><webMaster>imran@imranmustafa.net (Imran Mustafa)</webMaster><lastBuildDate>Mon, 05 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://imranmustafa.net/tags/distrobox/index.xml" rel="self" type="application/rss+xml"/><item><title>Distrobox Is Why We Can Have Nice Things</title><link>https://imranmustafa.net/distrobox-is-why-we-can-have-nice-things/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0000</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/distrobox-is-why-we-can-have-nice-things/</guid><description>&lt;p>In my last &lt;a href="https://imranmustafa.net/nix-on-debian/">blog post&lt;/a> I went over the best ways to get &lt;a href="https://nixos.org/">Nix&lt;/a> working on &lt;a href="https://www.debian.org/">Debian&lt;/a>, so
+you could get tons of new packages on the system in a stable way. Not even a
+month later I found out about &lt;a href="https://distrobox.it/">Distrobox&lt;/a> which is a tool based around
+containerization, allowing you to bring any package manager and package
+repository to your distro of choice.&lt;/p>
+&lt;div id="outline-container-headline-1" class="outline-3">
+&lt;h3 id="headline-1">
+Is Distrobox Right For You?
+&lt;/h3>
+&lt;div id="outline-text-headline-1" class="outline-text-3">
+&lt;p>Distrobox is essentially a wrapper around a container engine. That creates
+lightweight and highly transparent containers, bringing the user land of any
+containerized Linux OS to your current system. This can do lots of great things
+especially with development work, but another great use is an expansion to
+what package managers you can use. This becomes even easier with Distrobox&amp;#39;s
+ability to export binaries out of the containers and into your regular Linux
+system. Making it even easier to install and manage programs not naively
+available through your distro.&lt;/p></description></item></channel></rss>

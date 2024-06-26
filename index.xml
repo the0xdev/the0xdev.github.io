@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on I.M Blogging</title><link>https://imranmustafa.net/</link><description>Recent content in Home on I.M Blogging</description><generator>Hugo</generator><language>en</language><managingEditor>imran@imranmustafa.net (Imran Mustafa)</managingEditor><webMaster>imran@imranmustafa.net (Imran Mustafa)</webMaster><lastBuildDate>Fri, 09 May 2025 00:00:00 -0400</lastBuildDate><atom:link href="https://imranmustafa.net/index.xml" rel="self" type="application/rss+xml"/><item><title>Using Reuse</title><link>https://imranmustafa.net/using-reuse/</link><pubDate>Fri, 09 May 2025 00:00:00 -0400</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/using-reuse/</guid><description>
+&lt;p>&lt;a href="https://reuse.software/">reuse&lt;/a> is a software tool that can annotate your git repos with copyright
+information, download licences, and automatically check for compliance with the
+&lt;a href="https://reuse.software/spec-3.3/">reuse standard&lt;/a>. All from the command line. Leaving you with more time to work on
+what actually matters instead of the tedium of copyright law.&lt;/p>
+&lt;div id="outline-container-headline-1" class="outline-3">
+&lt;h3 id="headline-1">
+Installation
+&lt;/h3>
+&lt;div id="outline-text-headline-1" class="outline-text-3">
+&lt;p>reuse is widely packaged&lt;sup class="footnote-reference">&lt;a id="footnote-reference-1" href="#footnote-1">1&lt;/a>&lt;/sup> so its likely already present in your distros
+repo. Making installation through your preferred package manager simple.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-2" class="outline-3">
+&lt;h3 id="headline-2">
+Usage
+&lt;/h3>
+&lt;div id="outline-text-headline-2" class="outline-text-3">
+&lt;p>The first and most important command is &lt;code class="verbatim">reuse annotate&lt;/code>, which creates the
+copyright notice, and references to the licences. It needs three arguments, the
+first being the notice information (&lt;code>-c &amp;#34;YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&amp;#34;&lt;/code>),
+as well as the licence to use (&lt;code>-l &amp;#34;SPDX_LICENSE_IDENTIFIER&amp;#34;&lt;/code>), along with files to be
+annotated. Putting it all together will give you this.&lt;/p>
+&lt;div class="src src-sh">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>reuse annotate -c &lt;span style="color:#e6db74">&amp;#34;YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&amp;#34;&lt;/span> -l &lt;span style="color:#e6db74">&amp;#34;SPDX_LICENSE_IDENTIFIER&amp;#34;&lt;/span> YOUR_FILE&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>This will add a header compliant with the reuse standard to the file in
+question. it will look something like below, though it can change
+depending on the specific notice style&lt;sup class="footnote-reference">&lt;a id="footnote-reference-2" href="#footnote-2">2&lt;/a>&lt;/sup> and file type.&lt;/p>
+&lt;pre class="example">
+# SPDX-FileCopyrightText: YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt; 
+#
+# SPDX-License-Identifier: SPDX_LICENSE_IDENTIFIER
+&lt;/pre>
+&lt;p>Now this command is quite unwieldy, which is why I would recommend you to create
+aliases or abbreviations in your shell to infill the data.&lt;/p>
+&lt;p>
+While this will cover most of your uses, sometimes you&amp;#39;ll need to annotate a
+binary file or one that you shouldn&amp;#39;t edit. In these situations you should pass
+&lt;code>--force-dot-license&lt;/code> which will create a seprate file with the notice. Other
+times reuse wont recognize a file type, in which case you can use a dot licence
+like before or as a fallback (&lt;code>--fallback-dot-license&lt;/code>). Forcing a style with
+&lt;code>--style=STYLE&lt;/code>&lt;sup class="footnote-reference">&lt;a id="footnote-reference-3" href="#footnote-3">3&lt;/a>&lt;/sup> is useful when you know the correct encoding for a particular
+file.&lt;/p>
+&lt;p>
+After you have notices for all the files, &lt;code class="verbatim">reuse download --all&lt;/code> will place the
+needed licenses into a &lt;code class="verbatim">LICENSES&lt;/code> folder at the root of the repo.&lt;/p>
+&lt;p>
+&lt;code class="verbatim">reuse lint&lt;/code> is a simple command that will check the repo for files that have no
+notices, and other missing information. Giving a few recommendations on how to
+fix the issues and insure compliance.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-3" class="outline-3">
+&lt;h3 id="headline-3">
+Footnotes 
+&lt;/h3>
+&lt;/div>
+&lt;div class="footnotes">
+&lt;hr class="footnotes-separatator">
+&lt;div class="footnote-definitions">
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-1">&lt;a href="#footnote-reference-1">1&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;figure>&lt;a href="https://repology.org/project/reuse/versions">&lt;img src="https://repology.org/badge/vertical-allrepos/reuse.svg"
+ alt="repology stats for reuse">&lt;/a>
+&lt;/figure>
+
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-2">&lt;a href="#footnote-reference-2">2&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>This is the table of supported styles&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>name&lt;/th>
+&lt;th>example&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>spdx&lt;/td>
+&lt;td>SPDX-FileCopyrightText: 2025 YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>spdx-c&lt;/td>
+&lt;td>SPDX-FileCopyrightText: (C) 2025 YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>spdx-symbol&lt;/td>
+&lt;td>SPDX-FileCopyrightText: © 2025 YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>string&lt;/td>
+&lt;td>Copyright 2025 YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>string-c&lt;/td>
+&lt;td>Copyright (C) 2025 YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>string-symbol&lt;/td>
+&lt;td>Copyright © 2025 YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>symbol&lt;/td>
+&lt;td>© 2025 YOUR_NAME &amp;lt;YOUR_EMAIL@example.com&amp;gt;&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-3">&lt;a href="#footnote-reference-3">3&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>Here is the complete list of styles.&lt;/p>
+&lt;ul>
+&lt;li>applescript&lt;/li>
+&lt;li>aspx&lt;/li>
+&lt;li>bat&lt;/li>
+&lt;li>bibtex&lt;/li>
+&lt;li>c&lt;/li>
+&lt;li>cpp&lt;/li>
+&lt;li>cppsingle&lt;/li>
+&lt;li>f&lt;/li>
+&lt;li>ftl&lt;/li>
+&lt;li>handlebars&lt;/li>
+&lt;li>haskell&lt;/li>
+&lt;li>html&lt;/li>
+&lt;li>jinja&lt;/li>
+&lt;li>julia&lt;/li>
+&lt;li>lisp&lt;/li>
+&lt;li>m4&lt;/li>
+&lt;li>ml&lt;/li>
+&lt;li>f90&lt;/li>
+&lt;li>plantuml&lt;/li>
+&lt;li>python&lt;/li>
+&lt;li>rst&lt;/li>
+&lt;li>semicolon&lt;/li>
+&lt;li>tex&lt;/li>
+&lt;li>man&lt;/li>
+&lt;li>vst&lt;/li>
+&lt;li>vim&lt;/li>
+&lt;li>xquery&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Simplifying Syncthing With Nix</title><link>https://imranmustafa.net/simplifying-syncthing-with-nix/</link><pubDate>Sat, 07 Dec 2024 17:34:52 -0500</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/simplifying-syncthing-with-nix/</guid><description>
+&lt;p>&lt;a href="https://syncthing.net/">Syncthing&lt;/a> is a wonderful tool that I use to sync folders quickly and securely
+across my devices without having to use a proprietary tool like &lt;a href="https://www.dropbox.com/">Dropbox&lt;/a>. You
+can use this tool on almost any system, and I definitely would recommend it to
+anyone who wants to sync files across their devices due to its ease of use and
+security.&lt;/p>
+&lt;p>
+This post doesn&amp;#39;t go over how you would use Syncthing normally as you would on any
+other distro, instead showing off how nix can be used to manage Syncthing. Which
+can be especially great when you need to manage a lot of devices or folders. If you
+want a standard guide I would recommend Syncthing&amp;#39;s great &lt;a href="https://docs.syncthing.net/intro/getting-started.html">guide&lt;/a> and
+&lt;a href="https://docs.syncthing.net/">documentation&lt;/a>.&lt;/p>
+&lt;div id="outline-container-headline-1" class="outline-3">
+&lt;h3 id="headline-1">
+The Issue
+&lt;/h3>
+&lt;div id="outline-text-headline-1" class="outline-text-3">
+&lt;p>Something that may come up as a hurdle with Syncthing is when dealing with
+networks of more then just a few devices/folders (i.e more then 3). As adding new
+devices or managing shared folders, becomes far more tedious as each individual
+machine will need to be configured to manage the network as a whole&lt;sup class="footnote-reference">&lt;a id="footnote-reference-1" href="#footnote-1">1&lt;/a>&lt;/sup>.&lt;/p>
+&lt;p>
+For example, if you had five devices that you wanted to link together. After
+installing and setting up Syncthing on each machine, device one will need to
+connect device two. Then device two will need to accept the connection from
+device one, this will be repeated between each device pair if you want all
+devices to connect to each other. After each device is connected, sharing a
+folder will require a similar process of creating, configuring, and sharing
+with all relevant devices. Then accepting the folders, and configuring
+the there settings on the new devices as well.&lt;/p>
+&lt;p>
+This can be very annoying when dealing with large number of devices or
+folders that need to be connected together. While there are methods within
+Syncthing itself, such as &lt;a href="https://docs.syncthing.net/users/config.html#config-option-device.autoacceptfolders">autoAcceptFolders&lt;/a>. I feel that the nix method
+I will show makes this all so much easier.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-2" class="outline-3">
+&lt;h3 id="headline-2">
+With Nix
+&lt;/h3>
+&lt;div id="outline-text-headline-2" class="outline-text-3">
+&lt;p>When you add in nix to this you get the ability to define all devices, and the
+folders that they share in one file. With changes reflected across all devices
+without the need to individually manage each devices&amp;#39; folders and settings.&lt;/p>
+&lt;p>
+This is done using the Syncthing service in nix, which has the options
+&lt;code>services.syncthing.settings.devices&lt;/code> which lets you define
+all devices in the network and &lt;code>services.syncthing.settings.folders&lt;/code>
+which defines folders. For example if you had three devices you could define
+them all in the service like so.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span> services&lt;span style="color:#f92672">.&lt;/span>syncthing&lt;span style="color:#f92672">.&lt;/span>settings&lt;span style="color:#f92672">.&lt;/span>devices &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device1&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;}; 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device2&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device3&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>With each device getting a name, and their device ID set. You can then use
+these devices when defining folders. For example.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span> services&lt;span style="color:#f92672">.&lt;/span>syncthing&lt;span style="color:#f92672">.&lt;/span>settings&lt;span style="color:#f92672">.&lt;/span>folders &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home/youruser/sync&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> devices &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;device1&amp;#34;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;device2&amp;#34;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;device3&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>This is a pretty simple folder config, but you can already see how much easier
+it will be managing devices and folders with everything defined in one file. As
+any changes to which devices share which folders will be automatically made with
+and devices that use this service configuration. Adding devices is simply done
+by extending &lt;code>services.syncthing.settings.devices&lt;/code> and then adding them to the
+respective folders.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span> services&lt;span style="color:#f92672">.&lt;/span>syncthing&lt;span style="color:#f92672">.&lt;/span>settings&lt;span style="color:#f92672">.&lt;/span>devices &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device1&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;}; 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device2&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device3&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device4&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> services&lt;span style="color:#f92672">.&lt;/span>syncthing&lt;span style="color:#f92672">.&lt;/span>settings&lt;span style="color:#f92672">.&lt;/span>folders &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home/youruser/sync&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> devices &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;device1&amp;#34;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;device2&amp;#34;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;device3&amp;#34;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;device4&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>That&amp;#39;s it. Just update the config the machines are using and then they will sort
+out the rest.&lt;/p>
+&lt;div id="outline-container-headline-3" class="outline-4">
+&lt;h4 id="headline-3">
+Adding non-nix hosts
+&lt;/h4>
+&lt;div id="outline-text-headline-3" class="outline-text-4">
+&lt;p>Now this is great for managing Syncthing between NixOS hosts, but you may be
+wondering how to add non-NixOS host into your config. This is pretty simple, as
+adding the non-nix device ID to the devices list and then treating them the same
+as a NixOS host. Though you&amp;#39;ll need to manually accept the connections and
+folders on the devices that aren&amp;#39;t managed by nix.&lt;/p>
+&lt;div id="outline-container-headline-4" class="outline-5">
+&lt;h5 id="headline-4">
+Manual management
+&lt;/h5>
+&lt;div id="outline-text-headline-4" class="outline-text-5">
+&lt;p>If you want to have manual management of device connections and folders , set
+&lt;code>overrideFolders&lt;/code>, and &lt;code>overrideDevices&lt;/code> to &lt;code>False&lt;/code>, along with
+&lt;code>localAnnounceEnabled&lt;/code> set to &lt;code>true&lt;/code>. This will allow you to manage the
+Syncthing service outside of the configuration set in the file. I don&amp;#39;t
+recommend this but it is an option that you can take if it&amp;#39;s what your most
+comfortable with.&lt;/p>
+&lt;p>
+Also to note, without both override options set to false changes that you make
+through the Syncthing UI will be reset after the system restarts.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-5" class="outline-4">
+&lt;h4 id="headline-5">
+Other Config Options
+&lt;/h4>
+&lt;div id="outline-text-headline-5" class="outline-text-4">
+&lt;p>While everything till this point will give you most of what you need to know,
+there are some extra options that you can configure to fine tune your personal
+setup.&lt;/p>
+&lt;div id="outline-container-headline-6" class="outline-5">
+&lt;h5 id="headline-6">
+&lt;code>services.syncthing.settings.options.urAccepted&lt;/code>
+&lt;/h5>
+&lt;div id="outline-text-headline-6" class="outline-text-5">
+&lt;p>Syncthing reports anonymous usage data back to the development team, normally
+this would show a pop-up when you first access the web UI. While in NixOS you
+can declare your decision in the service itself. A negative number is a no, and
+a positive number is a yes. While 0 (the default) will prompt the software
+to ask you through the web UI as normal.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-7" class="outline-5">
+&lt;h5 id="headline-7">
+&lt;code>services.syncthing.settings.options.relaysEnabled&lt;/code>
+&lt;/h5>
+&lt;div id="outline-text-headline-7" class="outline-text-5">
+&lt;p>The relay system in Syncthing is how devices on separate networks that normally
+wouldn&amp;#39;t be able to connect with each other, interact. It&amp;#39;s useful when you need
+your devices to connect even when they move to another location/network (i.e your
+laptop, or phone), or if some devices are just on disparate networks
+normally. Relaying is disabled by default, though setting
+&lt;code>services.syncthing.settings.options.relaysEnabled&lt;/code> to &lt;code>true&lt;/code> will allow the
+device to connect through the relay service provided by the Syncthing team.&lt;/p>
+&lt;p>
+It&amp;#39;s possible to reconfigure the relay service that your network will make use
+of, helpful if you self-host a relay or use one from another
+provider&lt;sup class="footnote-reference">&lt;a id="footnote-reference-2" href="#footnote-2">2&lt;/a>&lt;/sup>. Though since I make use of the default relay service I&amp;#39;m not
+100% certain on how to set this up&lt;sup class="footnote-reference">&lt;a id="footnote-reference-3" href="#footnote-3">3&lt;/a>&lt;/sup>.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-8" class="outline-5">
+&lt;h5 id="headline-8">
+&lt;code>services.syncthing.settings.folders.&amp;lt;name&amp;gt;.versioning&lt;/code>
+&lt;/h5>
+&lt;div id="outline-text-headline-8" class="outline-text-5">
+&lt;p>Versioning is important as it offers some protection against deleting files by
+accident&lt;sup class="footnote-reference">&lt;a id="footnote-reference-4" href="#footnote-4">4&lt;/a>&lt;/sup>. To enable versioning on a folder set
+&lt;code>services.syncthing.settings.folders.&amp;lt;name&amp;gt;.versioning.type&lt;/code> to a supported
+versioning strategy&lt;sup class="footnote-reference">&lt;a id="footnote-reference-5" href="#footnote-5">5&lt;/a>&lt;/sup>. Then pass the arguments through
+&lt;code>services.syncthing.settings.folders.&amp;lt;name&amp;gt;.versioning.params&lt;/code> to override any
+default values you want&lt;sup class="footnote-reference">&lt;a id="footnote-reference-5" href="#footnote-5">5&lt;/a>&lt;/sup>. This is the example setup of a staggered folder
+in the nix docs.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span> services&lt;span style="color:#f92672">.&lt;/span>syncthing&lt;span style="color:#f92672">.&lt;/span>settings&lt;span style="color:#f92672">.&lt;/span>folders&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>versioning &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> type &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;staggered&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> params &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fsPath &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;/syncthing/backup&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cleanInterval &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;3600&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> maxAge &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;31536000&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-9" class="outline-3">
+&lt;h3 id="headline-9">
+Basic Template
+&lt;/h3>
+&lt;div id="outline-text-headline-9" class="outline-text-3">
+&lt;p>Putting it all together you might have something like this for the service
+configuration.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># SPDX-FileCopyrightText: 2024 Imran Mustafa &amp;lt;imran@imranmustafa.net&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># SPDX-License-Identifier: GPL-3.0-or-later&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pkgs&lt;span style="color:#f92672">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lib&lt;span style="color:#f92672">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> config&lt;span style="color:#f92672">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> options &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> syncthing&lt;span style="color:#f92672">.&lt;/span>enable &lt;span style="color:#f92672">=&lt;/span> lib&lt;span style="color:#f92672">.&lt;/span>mkEnableOption &lt;span style="color:#e6db74">&amp;#34;Syncthing&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> config &lt;span style="color:#f92672">=&lt;/span> lib&lt;span style="color:#f92672">.&lt;/span>mkIf config&lt;span style="color:#f92672">.&lt;/span>syncthing&lt;span style="color:#f92672">.&lt;/span>enable {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> services&lt;span style="color:#f92672">.&lt;/span>syncthing &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> enable &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dataDir &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;/home/YOUR_USER&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> openDefaultPorts &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> settings &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> options &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> urAccepted &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">-1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> relaysEnabled &lt;span style="color:#f92672">=&lt;/span> True;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> devices &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device1&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;device2&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX-XXXXXXX&amp;#34;&lt;/span>;};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> folders &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home/YOUR_USER/sync&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> devices &lt;span style="color:#f92672">=&lt;/span> [device1 device2];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> versioning &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> type &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;staggered&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> params &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fsPath &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;/syncthing/backup&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cleanInterval &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;3600&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> maxAge &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;31536000&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-10" class="outline-3">
+&lt;h3 id="headline-10">
+Footnotes
+&lt;/h3>
+&lt;/div>
+&lt;div class="footnotes">
+&lt;hr class="footnotes-separatator">
+&lt;div class="footnote-definitions">
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-1">&lt;a href="#footnote-reference-1">1&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>I&amp;#39;m assuming the network is maximally connected to show off the problem.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-2">&lt;a href="#footnote-reference-2">2&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>A list of public relays is available at &lt;a href="https://relays.syncthing.net/">https://relays.syncthing.net/&lt;/a>, &lt;strong>These
+are not provided by the Syncthing team.&lt;/strong>&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-3">&lt;a href="#footnote-reference-3">3&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>Sorry if you needed that information.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-4">&lt;a href="#footnote-reference-4">4&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>Though this wouldn&amp;#39;t count as a proper backup.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-5">&lt;a href="#footnote-reference-5">5&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>&lt;a href="https://docs.syncthing.net/users/versioning.html">https://docs.syncthing.net/users/versioning.html&lt;/a>&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Simple Restic Backups on Nixos</title><link>https://imranmustafa.net/simple-restic-backup-on-nixos/</link><pubDate>Sat, 16 Nov 2024 16:32:42 -0500</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/simple-restic-backup-on-nixos/</guid><description>
+&lt;p>When it comes to all the things that &lt;a href="https://nixos.org/">nix&lt;/a> lets you do, defining complex services
+deterministically in text, is probably the most powerful. For example I have nix
+manage all of my system backup jobs. Which could be handled with a shell
+script, but can be so much more extensible when configured entirely within nix. I
+hope showing off how I manage this can help you further understand what you can
+do with nix, especially with configuring services.&lt;/p>
+&lt;p>
+This post will go over how I use nix to manage &lt;a href="https://restic.net/">restic&lt;/a>, which is my preferred
+backup system. Nix supports other programs, which you can lookup at
+&lt;a href="https://search.nixos.org/options">https://search.nixos.org/options&lt;/a> or
+&lt;a href="https://nixos.org/manual/nixos/stable/options">https://nixos.org/manual/nixos/stable/options&lt;/a> to see there configuration
+options.&lt;/p>
+&lt;div id="outline-container-headline-1" class="outline-3">
+&lt;h3 id="headline-1">
+The Important Config Options
+&lt;/h3>
+&lt;div id="outline-text-headline-1" class="outline-text-3">
+&lt;p>There are (at time of writing) 22 configuration options for the restic backup
+service in nix. Though you don&amp;#39;t need to set all of them to get restic working. I&amp;#39;ll
+go over the most important ones that need to be set and what they mean.&lt;/p>
+&lt;div id="outline-container-headline-2" class="outline-4">
+&lt;h4 id="headline-2">
+what&amp;#39;s &lt;code class="verbatim">&amp;lt;name&amp;gt;&lt;/code>
+&lt;/h4>
+&lt;div id="outline-text-headline-2" class="outline-text-4">
+&lt;p>The restic service in nix is setup to have separate configuration options for
+each backup job that you set. &lt;code class="verbatim">&amp;lt;name&amp;gt;&lt;/code> is the placeholder that the documentation
+uses, and can be changed to whatever you think best describes that backup. For example.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>my-remote-backup &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> thing &lt;span style="color:#f92672">=&lt;/span> True;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}; &lt;span style="color:#75715e"># Settings aren&amp;#39;t shared between each backup&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>my-other-remote-backup &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> thing &lt;span style="color:#f92672">=&lt;/span> False;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}; They can be set diffrently
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>my-local-backup &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> other-things &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>Each of these would be a separate systemd service with its own wrapper and
+timer&lt;sup class="footnote-reference">&lt;a id="footnote-reference-1" href="#footnote-1">1&lt;/a>&lt;/sup>. This is quite handy when managing multiple backups which each need
+to be configured differently.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-3" class="outline-4">
+&lt;h4 id="headline-3">
+&lt;code class="verbatim">paths&lt;/code> and &lt;code class="verbatim">exclude&lt;/code>
+&lt;/h4>
+&lt;div id="outline-text-headline-3" class="outline-text-4">
+&lt;p>paths is a simple list of strings that represent the paths that you want restic
+to backup. While exclude will tell restic what you don&amp;#39;t want included in the
+final backup. Useful for caches, a steam library and anything you wouldn&amp;#39;t want
+in the final snapshot.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>paths &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home/&amp;#34;&lt;/span> &lt;span style="color:#75715e"># backup all user home directories&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>exclude &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home/*/.cache&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home/*/somereallybigfile/youdon&amp;#39;tneed/backedup&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>];&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-4" class="outline-4">
+&lt;h4 id="headline-4">
+&lt;code class="verbatim">initialize&lt;/code>
+&lt;/h4>
+&lt;div id="outline-text-headline-4" class="outline-text-4">
+&lt;p>This is a boolean that when set to true will allow the restic service to
+initialize repositories. As by default the backup job will fail if it does not
+find a preexisting repository at the set URL, which will require you to setup
+each repository manually before this service will work.&lt;/p>
+&lt;p>
+I like letting restic deal with initialization on its own, and I would recommend
+this to you as well.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>initialize &lt;span style="color:#f92672">=&lt;/span> True;&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-5" class="outline-4">
+&lt;h4 id="headline-5">
+&lt;code class="verbatim">pruneOpts&lt;/code>
+&lt;/h4>
+&lt;div id="outline-text-headline-5" class="outline-text-4">
+&lt;p>This one doesn&amp;#39;t absolutely need to be set but I recommend some pruning of your
+repositories just to clean up older and less important snapshots. It&amp;#39;s simple to
+define as well, just pass each prune options as a string in a list. The example
+below is just what I use, you are free to change things around to suit your
+needs.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>pruneOpts &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-daily 7&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-weekly 5&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-monthly 12&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-yearly 10&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>];&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-6" class="outline-4">
+&lt;h4 id="headline-6">
+&lt;code class="verbatim">timerConfig&lt;/code>
+&lt;/h4>
+&lt;div id="outline-text-headline-6" class="outline-text-4">
+&lt;p>Having your backups occur regularly is extremely important, and &lt;code class="verbatim">timerconfig&lt;/code> is
+what defines the systemd unit that triggers the backup you defined. The options
+are the standard &lt;a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html">&lt;code class="verbatim">system.timer(5)&lt;/code>&lt;/a> that systemd uses. So setting a regular
+backup is as simple as defining &lt;code class="verbatim">OnCalendar&lt;/code> to &amp;#34;daily&amp;#34;/&amp;#34;weekly&amp;#34; or whatever
+else you prefer. &lt;code class="verbatim">Persistent&lt;/code> Should also be set to true so your machine can
+catch up on backups That it&amp;#39;s missed while powered off. &lt;/p>
+&lt;p>
+Important note, if the computer uses wifi to connect to the internet (e.g
+laptop). The backup will fail at boot due to the wifi not being connected at
+that point. It&amp;#39;ll work normally after it connects, or if it had Ethernet at
+boot. The simplest workaround I&amp;#39;ve found is setting &lt;code class="verbatim">OnBootSec&lt;/code> to a minute or 2
+so I can log in. After which the wifi connection will be working, and the
+backup will occur just fine.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>timerConfig &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># OnBootSec = &amp;#34;3m&amp;#34;; # uncomment this this line if your on wifi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> OnCalendar &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;daily&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Persistent &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-7" class="outline-4">
+&lt;h4 id="headline-7">
+&lt;code class="verbatim">passwordFile&lt;/code>
+&lt;/h4>
+&lt;div id="outline-text-headline-7" class="outline-text-4">
+&lt;p>If you encrypt your backup (which you should) this is where you would tell nix
+where the password would be stored. I would recommend using &lt;a href="https://github.com/Mic92/sops-nix">sops-nix&lt;/a> when it
+comes to managing secrets. Though you could also just hardcore a path and place
+a file there manually if you don&amp;#39;t want to setup sops.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>passwordFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>secrets&lt;span style="color:#f92672">.&lt;/span>restic-passphrase&lt;span style="color:#f92672">.&lt;/span>path;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># or&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>passwordFile &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;/home/user/.restic-password.txt&amp;#34;&lt;/span>;&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-8" class="outline-4">
+&lt;h4 id="headline-8">
+&lt;code class="verbatim">repoFile&lt;/code> / &lt;code class="verbatim">environmentFile&lt;/code>
+&lt;/h4>
+&lt;div id="outline-text-headline-8" class="outline-text-4">
+&lt;p>The &lt;code class="verbatim">repoFile&lt;/code> defines the URL&lt;sup class="footnote-reference">&lt;a id="footnote-reference-2" href="#footnote-2">2&lt;/a>&lt;/sup> that the repository is located at. While the
+&lt;code class="verbatim">environmentFile&lt;/code> defines the environment variables&lt;sup class="footnote-reference">&lt;a id="footnote-reference-3" href="#footnote-3">3&lt;/a>&lt;/sup> needed to access the
+repo. These would be the best way to define repo locations, though it is possible to
+use &lt;code class="verbatim">rcloneConfigFile&lt;/code> if you would prefer to use that back end.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>environmentFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;environmentFile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>path;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>services&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>backups&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>repositoryFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;repositoryFile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>path;&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>again you could just make these files and then hard code the paths, but again
+sops-nix lets you create files that contain your secrets with &lt;a href="https://github.com/Mic92/sops-nix?tab=readme-ov-file#templates">templates&lt;/a>. So I
+really would recommend it or a similar system when encoding secrets in a git repo.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Example sops.templates&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;repositoryfile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>content &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> s3:s3.example.com/&lt;/span>&lt;span style="color:#e6db74">${&lt;/span>config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>placeholder&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;bucket&amp;#34;&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;accessfile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>content &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> AWS_ACCESS_KEY_ID=&amp;#34;&lt;/span>&lt;span style="color:#e6db74">${&lt;/span>config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>placeholder&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;keyid&amp;#34;&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> AWS_SECRET_ACCESS_KEY=&amp;#34;&lt;/span>&lt;span style="color:#e6db74">${&lt;/span>config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>placeholder&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;accesskey&amp;#34;&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>;&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-9" class="outline-3">
+&lt;h3 id="headline-9">
+My Setup
+&lt;/h3>
+&lt;div id="outline-text-headline-9" class="outline-text-3">
+&lt;p>This is my personal setup from my own flake, which is meant to be imported into
+your system config after which you enable the option (e.g &lt;code>restic.enable
+= true&lt;/code>). You can use this as a base for your own backup setting, or
+a template to what you will implement in your own system config.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># SPDX-FileCopyrightText: 2024 Imran Mustafa &amp;lt;imran@imranmustafa.net&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># SPDX-License-Identifier: GPL-3.0-or-later&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pkgs&lt;span style="color:#f92672">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lib&lt;span style="color:#f92672">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> config&lt;span style="color:#f92672">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span> &lt;span style="color:#75715e"># these are the funciton package imports&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> options &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> restic&lt;span style="color:#f92672">.&lt;/span>enable &lt;span style="color:#f92672">=&lt;/span> lib&lt;span style="color:#f92672">.&lt;/span>mkEnableOption &lt;span style="color:#e6db74">&amp;#34;restic&amp;#34;&lt;/span>; &lt;span style="color:#75715e"># making this easy to toggle with an option&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> config &lt;span style="color:#f92672">=&lt;/span> lib&lt;span style="color:#f92672">.&lt;/span>mkIf config&lt;span style="color:#f92672">.&lt;/span>restic&lt;span style="color:#f92672">.&lt;/span>enable {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> services&lt;span style="color:#f92672">.&lt;/span>restic &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> backups &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">let&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> initialize &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exclude &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home/*/.cache&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> paths &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/home&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> checkOpts &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--with-cache&amp;#34;&lt;/span> &lt;span style="color:#75715e"># just to make checks faster&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> extraBackupArgs &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> extraOptions &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passwordFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>secrets&lt;span style="color:#f92672">.&lt;/span>restic-passphrase&lt;span style="color:#f92672">.&lt;/span>path;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pruneOpts &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-daily 7&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-weekly 5&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-monthly 12&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--keep-yearly 10&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timerConfig &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> OnBootSec &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;3m&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> OnCalendar &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;daily&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Persistent &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">in&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> backup &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">inherit&lt;/span> initialize exclude paths timerConfig checkOpts extraBackupArgs extraOptions passwordFile pruneOpts;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># using inherit lets you share common options between backups and make everything cleaner&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> environmentFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;environmentFile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>path;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repositoryFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;repositoryFile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>path;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>One thing that you might not get is the let statement that comes after
+&lt;code class="verbatim">backups&lt;/code> . It is simply there to define common options that I would normally
+want all my backups to share. This makes it easy to share variables between
+multiple backups without having to redefine the same values for each. For
+example if I wanted to set up another backup job to another location I could
+just define this.&lt;/p>
+&lt;div class="src src-nix">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>other &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">inherit&lt;/span> initialize exclude paths timerConfig checkOpts extraBackupArgs extraOptions passwordFile pruneOpts;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> environmentFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;other-environmentFile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>path;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> repositoryFile &lt;span style="color:#f92672">=&lt;/span> config&lt;span style="color:#f92672">.&lt;/span>sops&lt;span style="color:#f92672">.&lt;/span>templates&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#e6db74">&amp;#34;other-repositoryFile&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>path;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>Another neat thing that nix does is it creates a wrapper for each of the backups
+you setup (I.e &lt;code>restic-&amp;lt;name&amp;gt;&lt;/code>) that already have the environment values
+set. Making it simple to interact with the repos.&lt;/p>
+&lt;p>
+This should be enough to get you going on the path to writing your own backup
+service for your Nixos systems. As well as showing off the ways that nix can be
+more extensible while being simpler to implement then more conventional
+methods of implementing a automated backup.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnotes">
+&lt;hr class="footnotes-separatator">
+&lt;div class="footnote-definitions">
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-1">&lt;a href="#footnote-reference-1">1&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>If set.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-2">&lt;a href="#footnote-reference-2">2&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>URL = scheme &amp;#34;:&amp;#34; [&amp;#34;//&amp;#34; authority] path [&amp;#34;?&amp;#34; query] [&amp;#34;#&amp;#34; fragment]&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div class="footnote-definition">
+&lt;sup id="footnote-3">&lt;a href="#footnote-reference-3">3&lt;/a>&lt;/sup>
+&lt;div class="footnote-body">
+&lt;p>Formatted in accordance with &lt;a href="https://manpages.debian.org/stretch/systemd/systemd.exec.5.en.html">systemd.exec(5)&lt;/a>&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Distrobox Is Why We Can Have Nice Things</title><link>https://imranmustafa.net/distrobox-is-why-we-can-have-nice-things/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0000</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/distrobox-is-why-we-can-have-nice-things/</guid><description>
+&lt;p>In my last &lt;a href="https://imranmustafa.net/nix-on-debian/">blog post&lt;/a> I went over the best ways to get &lt;a href="https://nixos.org/">Nix&lt;/a> working on &lt;a href="https://www.debian.org/">Debian&lt;/a>, so
+you could get tons of new packages on the system in a stable way. Not even a
+month later I found out about &lt;a href="https://distrobox.it/">Distrobox&lt;/a> which is a tool based around
+containerization, allowing you to bring any package manager and package
+repository to your distro of choice.&lt;/p>
+&lt;div id="outline-container-headline-1" class="outline-3">
+&lt;h3 id="headline-1">
+Is Distrobox Right For You?
+&lt;/h3>
+&lt;div id="outline-text-headline-1" class="outline-text-3">
+&lt;p>Distrobox is essentially a wrapper around a container engine. That creates
+lightweight and highly transparent containers, bringing the user land of any
+containerized Linux OS to your current system. This can do lots of great things
+especially with development work, but another great use is an expansion to
+what package managers you can use. This becomes even easier with Distrobox&amp;#39;s
+ability to export binaries out of the containers and into your regular Linux
+system. Making it even easier to install and manage programs not naively
+available through your distro.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-2" class="outline-3">
+&lt;h3 id="headline-2">
+Setup
+&lt;/h3>
+&lt;div id="outline-text-headline-2" class="outline-text-3">
+&lt;p>Installing and setting up Distrobox is a breeze on most systems, as the only
+requirement besides Distrobox itself is a container engine. Specifically &lt;a href="https://podman.io/">Podman&lt;/a>,
+&lt;a href="https://www.docker.com/">Docker&lt;/a>, or &lt;a href="https://github.com/89luca89/lilipod">Lilipod&lt;/a>. I recommend Podman, but any of these are fine. Installing a
+container engine on most distros is a straight forward process, and better
+covered in other resources. You should look at both your distros documentation
+and packages along with the official instructions of your desired engine. I
+myself used nix to get everything onto my system.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Engine&lt;/th>
+&lt;th>Documentation&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Podman&lt;/td>
+&lt;td>&lt;a href="https://podman.io/docs/installation">https://podman.io/docs/installation&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Docker&lt;/td>
+&lt;td>&lt;a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Lilipod&lt;/td>
+&lt;td>&lt;a href="https://github.com/89luca89/lilipod?tab=readme-ov-file#getting-started">https://github.com/89luca89/lilipod?tab=readme-ov-file#getting-started&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>After you&amp;#39;ve confirmed you container engine is working a-okay, Distrobox is
+already packaged in &lt;a href="https://repology.org/project/distrobox/information">these distributions&lt;/a> (look under repositories for your
+distro). This should have you covered, but in the odd case you can&amp;#39;t there
+are also &lt;a href="https://distrobox.it/#alternative-methods">alternative&lt;/a> methods documented.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-3" class="outline-3">
+&lt;h3 id="headline-3">
+Basic Usage
+&lt;/h3>
+&lt;div id="outline-text-headline-3" class="outline-text-3">
+&lt;p>Distrobox has a pretty simple CLI and good &lt;a href="https://distrobox.it/usage/usage/">documentation&lt;/a> as well, but if you
+want the basics form me, they are based around the &lt;code class="verbatim">distrobox create&lt;/code> and
+&lt;code class="verbatim">distrobox export&lt;/code>. The first allows you to make a box while also configuring
+what base image to use (&lt;code class="verbatim">--image&lt;/code>), hooks to execute (&lt;code class="verbatim">--init-hooks&lt;/code> or
+&lt;code class="verbatim">--pre-init-hooks&lt;/code>) as well as other options. You can also use &lt;code class="verbatim">.ini&lt;/code> files and
+&lt;code class="verbatim">distrobox assemble&lt;/code> to declarative configure boxes. Export is what allows you
+to push binaries out of the container and into the host OS. Which makes
+expanding the packages you have access to trivially easy. The rest of the
+commands concern managing your boxes. There is also a good &lt;a href="https://flathub.org/apps/io.github.dvlv.boxbuddyrs">GUI&lt;/a> you can use if
+you want to skip over a lot of the command line stuff.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-4" class="outline-3">
+&lt;h3 id="headline-4">
+Getting the AUR Working on Debian
+&lt;/h3>
+&lt;div id="outline-text-headline-4" class="outline-text-3">
+&lt;blockquote>
+&lt;p>Warning: AUR packages are user-produced content. These PKGBUILDs are completely
+unofficial and have not been thoroughly vetted. Any use of the provided files is
+at your own risk. – &lt;a href="https://wiki.archlinux.org/title/Arch_User_Repository">Arch Wiki&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>Now that you understand some of the basics of Distrobox, I want to show
+something fun that you can do with all of this. Which is getting the &lt;a href="https://aur.archlinux.org/">AUR&lt;/a> working
+on Debian. It was honestly a lot easier then I thought it was going to
+be. First use this config as the base for where you&amp;#39;ll put all the AUR
+packages.&lt;/p>
+&lt;div class="src src-ini">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ini" data-lang="ini">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">[aur]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">additional_packages&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;neofetch&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">image&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">quay.io/toolbx/arch-toolbox:latest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">init&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">nvidia&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">false # nvidia seems to not work with the arch image&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">pull&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">root&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">replace&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">start_now&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">true&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>After using &lt;code class="verbatim">distrobox assemble&lt;/code> you&amp;#39;ll end up with a basic arch system
+and you can already get regular arch packages, and AUR packages using &lt;code class="verbatim">git
+clone&lt;/code> and &lt;code class="verbatim">makepkg&lt;/code>. Though I like using a helper program to make it easier to
+manage the system. &lt;a href="https://aur.archlinux.org/packages/yay">yay&lt;/a> is a very popular option which can be installed quite
+simply with the below commands while in the aur box.&lt;/p>
+&lt;div class="src src-sh">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git clone https://aur.archlinux.org/yay.git &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>cd yay &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>makepkg -si&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>Which you can use to install packages from the AUR or regular repositories.&lt;/p>
+&lt;div class="src src-sh">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>yay -S &lt;span style="color:#f92672">[&lt;/span>PACKAGENAME&lt;span style="color:#f92672">]&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>Also don&amp;#39;t forget to export the binaries out of the box if you want the base OS
+to have access to them.&lt;/p>
+&lt;div class="src src-sh">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>distrobox export --app &lt;span style="color:#f92672">[&lt;/span>PACKAGENAME&lt;span style="color:#f92672">]&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Nix on Debian</title><link>https://imranmustafa.net/nix-on-debian/</link><pubDate>Sat, 04 May 2024 14:10:10 -0400</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/nix-on-debian/</guid><description>&lt;p>A guide on the best way to use the &lt;a href="https://nixos.org/">Nix&lt;/a> package
+manager on &lt;a href="https://www.debian.org/">Debian&lt;/a>.&lt;/p>
+&lt;h2 id="nix">Nix?&lt;/h2>
+&lt;p>If you haven&amp;rsquo;t heard, &lt;a href="https://nixos.org/">NixOS&lt;/a> is a declarative and
+reproducible Linux distro that prides itself on extreme stability while also
+maintaining close to bleeding edge packaging. Its got a whole ecosystem of
+components capable of doing some really amazing stuff. While all of this is
+great, one of the coolest parts of Nix is the over 100,000 packages that it has
+available through Nixpkgs. The largest by any degree.&lt;/p>
+&lt;figure>&lt;a href="https://repology.org/repositories/statistics/total">&lt;img src="https://imranmustafa.net/nix-on-debian/map_repo_size_fresh.svg"
+ alt="repology stats of package repositories">&lt;/a>
+&lt;/figure>
+
+&lt;p>The best part, the package manager can be used on unrelated
+distros. Allowing almost any Linux system access to
+&lt;a href="https://github.com/nixos/nixpkgs">Nixpkgs&lt;/a> trivially.&lt;/p>
+&lt;h2 id="why-debian">Why Debian?&lt;/h2>
+&lt;p>Cause I ❤️ Debian.&lt;/p>
+&lt;h2 id="the-setup">The Setup&lt;/h2>
+&lt;p>For this guide/tutorial I&amp;rsquo;m going to be using a Debian 12 (bookworm) system to
+install Nix onto, though anything since 11 should work fine. If you&amp;rsquo;re using a
+Debian based system all these steps should also work.&lt;/p>
+&lt;h2 id="installation">Installation&lt;/h2>
+&lt;p>There are two main ways to install Nix. First you could use the native Debian
+package, the second would be the official install script. I&amp;rsquo;ll be going over the
+native package since I think that&amp;rsquo;s the best way to get Nix on Debian.&lt;/p>
+&lt;h3 id="debian-nix">Debian Nix&lt;/h3>
+&lt;p>Debian actually packages &lt;a href="https://packages.debian.org/bookworm/nix-bin">Nix&lt;/a>
+(since bullseye) in it&amp;rsquo;s stable branch making it easy to install the
+binaries though regular old &lt;code>apt&lt;/code>. Though I do recommend using the
+&lt;a href="https://packages.debian.org/bookworm/nix-setup-systemd">nix-setup-systemd&lt;/a>
+package, which does a lot of the heavy lifting automatically.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo apt install nix-setup-systemd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now that Nix is on your system you&amp;rsquo;ve got to add yourself to the &lt;code>nix-users&lt;/code>
+group to be able to interact with the package manager.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo usermod -aG nix-users &lt;span style="color:#66d9ef">$(&lt;/span>whoami&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After you&amp;rsquo;ve added yourself to &lt;code>nix-users&lt;/code> make sure to login again for the
+changes to take affect (&lt;code>sudo su $(whoami)&lt;/code>). Then you have to add a channel
+that Nix will pull its packages from. The easiest one to use is
+nixpkgs-unstable.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>nix-channel --update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Finally add &lt;code>~/.nix-profile/bin&lt;/code> to the &lt;code>PATH&lt;/code>, and add &lt;code>~/.nix-profile/share&lt;/code>
+to &lt;code>XDG_DATA_DIRS&lt;/code> if you want your desktop environment to be able to find
+anything that you install. I recommend doing this in your &lt;code>~/.profile&lt;/code>, but
+&lt;code>~/.bashrc&lt;/code> or &lt;code>~/.zshrc&lt;/code> also work. Below is what I use to make sure &lt;code>PATH&lt;/code> and
+&lt;code>XDG_DATA_DIRS&lt;/code> are set on my system.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">### set PATH so it includes user&amp;#39;s nix bin if it exists&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">[&lt;/span> -d &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/bin&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> ; &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> PATH&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/bin:&lt;/span>$PATH&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">### set XDG_DATA_DIR so it includes user&amp;#39;s nix share if it exists&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">[&lt;/span> -d &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/share&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> ; &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> XDG_DATA_DIRS&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/share:&lt;/span>$XDG_DATA_DIRS&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After all of that you can pretty much install anything from Nixpkgs.&lt;/p>
+&lt;h3 id="further-configuration">Further Configuration&lt;/h3>
+&lt;p>Nix does have extra features and config options that are not enabled by
+default. The most popular ones to change are allowing non-free packages, and
+new CLI along with flakes.&lt;/p>
+&lt;h4 id="non-free-packages">non-free packages&lt;/h4>
+&lt;p>Nix does not allow you to install the non-free packages from its archive unless
+you explicitly tell it to. There are different ways to do this depending on
+whether you want it temporally, or allowing non-free by default. adding &lt;code>{ allowUnfree = true; }&lt;/code> to you&amp;rsquo;re Nixpkg config (&lt;code>~/.config/nixpkgs/config.nix&lt;/code>)
+is the simplest way to enable non-free packages. Though if you only need it for
+a temporary shell or a build just &lt;code>export NIXPKGS_ALLOW_UNFREE=1&lt;/code> when you need
+to use non-free software.&lt;/p>
+&lt;h4 id="experimental-features">experimental features&lt;/h4>
+&lt;p>Nix have some features that are still in the works which is why they are not on
+by default. Nix will check &lt;code>~/.config/nix/nix.conf&lt;/code> for which features you&amp;rsquo;ve
+enabled, and you probably just want &lt;code>nix-command&lt;/code> and &lt;code>flakes&lt;/code> to start off with.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>experimental-features &lt;span style="color:#f92672">=&lt;/span> nix-command flakes
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Both &lt;code>~/.config/nixpkgs/config.nix&lt;/code> and &lt;code>~/.config/nix/nix.conf&lt;/code> may not be
+created by default. If that is the case, create the appropriate directory and
+files.&lt;/p>&lt;/blockquote>
+&lt;h2 id="basic-usage">Basic usage&lt;/h2>
+&lt;p>Now that you have a working Nix install, you can use it to easily and safely
+install tens of thousands of new packages onto your machine. For installing a
+package just find it on &lt;a href="https://search.nixos.org/packages">https://search.nixos.org/packages&lt;/a> which
+will show you the package name and some commands to install, though they
+generally look like this.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-env -iA nixpkgs.PACKAGENAME
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To uninstall packages just use &lt;code>nix-env -e&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-env -e PACKAGENAME
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="updating">Updating&lt;/h3>
+&lt;p>First Nix needs to update the channel(s) that you&amp;rsquo;ve added with &lt;code>nix-channel --update&lt;/code>, after which you can call &lt;code>nix-env -u&lt;/code> to update everything, or
+&lt;code>nix-env -u PACKAGENAME&lt;/code> to update a specific package.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --update &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> nix-env -u
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>I also recommend that you use &lt;code>nix-collect-garbage&lt;/code> when you update, as Nix
+keeps each generation of packages that you&amp;rsquo;ve installed/updated/uninstalled, so
+there is always a working version of them to rollback to. This eats up a lot of
+space, especially if you make a lot of changes to the system in quick succession.&lt;/p>
+&lt;p>I usually run something like this when I update my packages.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --update &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> nix-env -u &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> nix-collect-garbage -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="broken-things">Broken Things&lt;/h2>
+&lt;p>While Nix will add tonnes of stable packages to you system with ease,
+there is one downside to this all. GUI applications are more of a crap
+shoot of if they&amp;rsquo;ll work, while anything with a CLI has worked 100% of the time
+I&amp;rsquo;ve tried. This is something that I&amp;rsquo;ve still working on, so expect an update
+when I find out how to fix this. In the mean time I recommend using
+&lt;a href="https://www.flatpak.org/">flatpak&lt;/a> as that&amp;rsquo;s how I usually get GUI apps.&lt;/p>
+&lt;h2 id="tl-dr">TL-DR&lt;/h2>
+&lt;p>Run this to install.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo apt install -y nix-setup-systemd &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>sudo usermod -aG nix-users &lt;span style="color:#66d9ef">$(&lt;/span>whoami&lt;span style="color:#66d9ef">)&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>newgrp nix-users 
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then run this.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>nix-channel --update &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>newgrp -
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Add &lt;code>~/.nix-profile/bin&lt;/code> to your &lt;code>PATH&lt;/code> and &lt;code>~/.nix-profile/share&lt;/code> to
+&lt;code>XDG_DATA_DIRS&lt;/code>, use &lt;code>nix-env -iA nixpkgs.PACKAGENAME&lt;/code> to install stuff that you
+find on &lt;a href="https://search.nixos.org/packages">https://search.nixos.org/packages&lt;/a>.&lt;/p></description></item></channel></rss>
