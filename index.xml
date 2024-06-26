@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on I.M Blogging</title><link>https://imranmustafa.net/</link><description>Recent content in Home on I.M Blogging</description><generator>Hugo</generator><language>en</language><managingEditor>imran@imranmustafa.net (Imran Mustafa)</managingEditor><webMaster>imran@imranmustafa.net (Imran Mustafa)</webMaster><lastBuildDate>Mon, 05 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://imranmustafa.net/index.xml" rel="self" type="application/rss+xml"/><item><title>Distrobox Is Why We Can Have Nice Things</title><link>https://imranmustafa.net/distrobox-is-why-we-can-have-nice-things/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0000</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/distrobox-is-why-we-can-have-nice-things/</guid><description>
+&lt;p>In my last &lt;a href="https://imranmustafa.net/nix-on-debian/">blog post&lt;/a> I went over the best ways to get &lt;a href="https://nixos.org/">Nix&lt;/a> working on &lt;a href="https://www.debian.org/">Debian&lt;/a>, so
+you could get tons of new packages on the system in a stable way. Not even a
+month later I found out about &lt;a href="https://distrobox.it/">Distrobox&lt;/a> which is a tool based around
+containerization, allowing you to bring any package manager and package
+repository to your distro of choice.&lt;/p>
+&lt;div id="outline-container-headline-1" class="outline-3">
+&lt;h3 id="headline-1">
+Is Distrobox Right For You?
+&lt;/h3>
+&lt;div id="outline-text-headline-1" class="outline-text-3">
+&lt;p>Distrobox is essentially a wrapper around a container engine. That creates
+lightweight and highly transparent containers, bringing the user land of any
+containerized Linux OS to your current system. This can do lots of great things
+especially with development work, but another great use is an expansion to
+what package managers you can use. This becomes even easier with Distrobox&amp;#39;s
+ability to export binaries out of the containers and into your regular Linux
+system. Making it even easier to install and manage programs not naively
+available through your distro.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-2" class="outline-3">
+&lt;h3 id="headline-2">
+Setup
+&lt;/h3>
+&lt;div id="outline-text-headline-2" class="outline-text-3">
+&lt;p>Installing and setting up Distrobox is a breeze on most systems, as the only
+requirement besides Distrobox itself is a container engine. Specifically &lt;a href="https://podman.io/">Podman&lt;/a>,
+&lt;a href="https://www.docker.com/">Docker&lt;/a>, or &lt;a href="https://github.com/89luca89/lilipod">Lilipod&lt;/a>. I recommend Podman, but any of these are fine. Installing a
+container engine on most distros is a straight forward process, and better
+covered in other resources. You should look at both your distros documentation
+and packages along with the official instructions of your desired engine. I
+myself used nix to get everything onto my system.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Engine&lt;/th>
+&lt;th>Documentation&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Podman&lt;/td>
+&lt;td>&lt;a href="https://podman.io/docs/installation">https://podman.io/docs/installation&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Docker&lt;/td>
+&lt;td>&lt;a href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Lilipod&lt;/td>
+&lt;td>&lt;a href="https://github.com/89luca89/lilipod?tab=readme-ov-file#getting-started">https://github.com/89luca89/lilipod?tab=readme-ov-file#getting-started&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>After you&amp;#39;ve confirmed you container engine is working a-okay, Distrobox is
+already packaged in &lt;a href="https://repology.org/project/distrobox/information">these distributions&lt;/a> (look under repositories for your
+distro). This should have you covered, but in the odd case you can&amp;#39;t there
+are also &lt;a href="https://distrobox.it/#alternative-methods">alternative&lt;/a> methods documented.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-3" class="outline-3">
+&lt;h3 id="headline-3">
+Basic Usage
+&lt;/h3>
+&lt;div id="outline-text-headline-3" class="outline-text-3">
+&lt;p>Distrobox has a pretty simple CLI and good &lt;a href="https://distrobox.it/usage/usage/">documentation&lt;/a> as well, but if you
+want the basics form me, they are based around the &lt;code class="verbatim">distrobox create&lt;/code> and
+&lt;code class="verbatim">distrobox export&lt;/code>. The first allows you to make a box while also configuring
+what base image to use (&lt;code class="verbatim">--image&lt;/code>), hooks to execute (&lt;code class="verbatim">--init-hooks&lt;/code> or
+&lt;code class="verbatim">--pre-init-hooks&lt;/code>) as well as other options. You can also use &lt;code class="verbatim">.ini&lt;/code> files and
+&lt;code class="verbatim">distrobox assemble&lt;/code> to declarative configure boxes. Export is what allows you
+to push binaries out of the container and into the host OS. Which makes
+expanding the packages you have access to trivially easy. The rest of the
+commands concern managing your boxes. There is also a good &lt;a href="https://flathub.org/apps/io.github.dvlv.boxbuddyrs">GUI&lt;/a> you can use if
+you want to skip over a lot of the command line stuff.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;div id="outline-container-headline-4" class="outline-3">
+&lt;h3 id="headline-4">
+Getting the AUR Working on Debian
+&lt;/h3>
+&lt;div id="outline-text-headline-4" class="outline-text-3">
+&lt;blockquote>
+&lt;p>Warning: AUR packages are user-produced content. These PKGBUILDs are completely
+unofficial and have not been thoroughly vetted. Any use of the provided files is
+at your own risk. – &lt;a href="https://wiki.archlinux.org/title/Arch_User_Repository">Arch Wiki&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>Now that you understand some of the basics of Distrobox, I want to show
+something fun that you can do with all of this. Which is getting the &lt;a href="https://aur.archlinux.org/">AUR&lt;/a> working
+on Debian. It was honestly a lot easier then I thought it was going to
+be. First use this config as the base for where you&amp;#39;ll put all the AUR
+packages.&lt;/p>
+&lt;div class="src src-ini">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ini" data-lang="ini">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">[aur]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">additional_packages&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;neofetch&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">image&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">quay.io/toolbx/arch-toolbox:latest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">init&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">nvidia&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">false # nvidia seems to not work with the arch image&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">pull&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">root&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">replace&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">start_now&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">true&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>After using &lt;code class="verbatim">distrobox assemble&lt;/code> you&amp;#39;ll end up with a basic arch system
+and you can already get regular arch packages, and AUR packages using &lt;code class="verbatim">git
+clone&lt;/code> and &lt;code class="verbatim">makepkg&lt;/code>. Though I like using a helper program to make it easier to
+manage the system. &lt;a href="https://aur.archlinux.org/packages/yay">yay&lt;/a> is a very popular option which can be installed quite
+simply with the below commands while in the aur box.&lt;/p>
+&lt;div class="src src-sh">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git clone https://aur.archlinux.org/yay.git &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>cd yay &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>makepkg -si&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>Which you can use to install packages from the AUR or regular repositories.&lt;/p>
+&lt;div class="src src-sh">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>yay -S &lt;span style="color:#f92672">[&lt;/span>PACKAGENAME&lt;span style="color:#f92672">]&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;p>Also don&amp;#39;t forget to export the binaries out of the box if you want the base OS
+to have access to them.&lt;/p>
+&lt;div class="src src-sh">
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>distrobox export --app &lt;span style="color:#f92672">[&lt;/span>PACKAGENAME&lt;span style="color:#f92672">]&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Nix on Debian</title><link>https://imranmustafa.net/nix-on-debian/</link><pubDate>Sat, 04 May 2024 14:10:10 -0400</pubDate><author>imran@imranmustafa.net (Imran Mustafa)</author><guid>https://imranmustafa.net/nix-on-debian/</guid><description>&lt;p>This is my guide on the best way to use the &lt;a href="https://nixos.org/">Nix&lt;/a> package
+manager on &lt;a href="https://www.debian.org/">Debian&lt;/a>.&lt;/p>
+&lt;h2 id="table-of-contents-----toc----">Table of Contents &lt;!-- raw HTML omitted -->&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="#Nix">Nix?&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#why-debian">Why Debian?&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#the-setup">The Setup&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#installation">Installation&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#debian-Nix">Debian Nix&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#further-configuration">Further Configuration&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#basic-usage">Basic usage&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#updating">Updating&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#broken-things">Broken Things&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#tl-dr">TL-DR&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="nix">Nix?&lt;/h2>
+&lt;p>If you haven&amp;rsquo;t heard, &lt;a href="https://nixos.org/">NixOS&lt;/a> is a declarative and
+reproducible Linux distro that prides itself on extreme stability while also
+maintaining close to bleeding edge packaging. Its got a whole ecosystem of
+components capable of doing some really amazing stuff. While all of this is
+great, one of the coolest parts of Nix is the over 100,000 packages that it has
+available through its package manager. The largest by any degree.&lt;/p>
+&lt;figure>&lt;a href="https://repology.org/repositories/statistics/total">&lt;img src="https://imranmustafa.net/nix-on-debian/map_repo_size_fresh.svg"
+ alt="repology stats of package repositories">&lt;/a>
+&lt;/figure>
+
+&lt;p>The best part, the package manager can be used on unrelated
+distros. Allowing almost any Linux system access to
+&lt;a href="https://github.com/nixos/nixpkgs">Nixpkgs&lt;/a> trivially.&lt;/p>
+&lt;h2 id="why-debian">Why Debian?&lt;/h2>
+&lt;p>Cause I ❤️ Debian.&lt;/p>
+&lt;h2 id="the-setup">The Setup&lt;/h2>
+&lt;p>For this guide/tutorial I&amp;rsquo;m going to be using a Debian 12 (bookworm) system to
+install Nix onto, though anything since 11 should work fine. If you&amp;rsquo;re using a
+Debian based system all these steps should also work.&lt;/p>
+&lt;h2 id="installation">Installation&lt;/h2>
+&lt;p>There are two main ways to install Nix. First you could use the native Debian
+package, the second would be the official install script. I&amp;rsquo;ll be going over the
+native package since I think that&amp;rsquo;s the best way to get Nix on Debian.&lt;/p>
+&lt;h3 id="debian-nix">Debian Nix&lt;/h3>
+&lt;p>Debian actually packages &lt;a href="https://packages.debian.org/bookworm/nix-bin">Nix&lt;/a>
+(since bullseye) in it&amp;rsquo;s stable branch making it easy to install the
+binaries though regular old &lt;code>apt&lt;/code>. Though I do recommend using the
+&lt;a href="https://packages.debian.org/bookworm/nix-setup-systemd">nix-setup-systemd&lt;/a>
+package, which does a lot of the heavy lifting automatically.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo apt install nix-setup-systemd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now that Nix is on your system you&amp;rsquo;ve got to add yourself to the &lt;code>nix-users&lt;/code>
+group to be able to interact with the package manager.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo usermod -aG nix-users &lt;span style="color:#66d9ef">$(&lt;/span>whoami&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After you&amp;rsquo;ve added yourself to &lt;code>nix-users&lt;/code> make sure to restart for the
+changes to take affect (&lt;code>sudo su $(whoami)&lt;/code>). Then you have to add a channel
+that Nix will pull its packages from. The easiest one to use is
+nixpkgs-unstable.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>nix-channel --update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Finally add &lt;code>~/.nix-profile/bin&lt;/code> to the &lt;code>PATH&lt;/code>, and add &lt;code>~/.nix-profile/share&lt;/code>
+to &lt;code>XDG_DATA_DIRS&lt;/code> if you want your desktop environment to be able to find
+anything that you install. I recommend doing this in your &lt;code>~/.profile&lt;/code>, but
+&lt;code>~/.bashrc&lt;/code> or &lt;code>~/.zshrc&lt;/code> also work. Below is what I use to make sure &lt;code>PATH&lt;/code> and
+&lt;code>XDG_DATA_DIRS&lt;/code> are set on my system.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">### set PATH so it includes user&amp;#39;s nix bin if it exists&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">[&lt;/span> -d &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/bin&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> ; &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> PATH&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/bin:&lt;/span>$PATH&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">### set XDG_DATA_DIR so it includes user&amp;#39;s nix share if it exists&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">[&lt;/span> -d &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/share&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> ; &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> XDG_DATA_DIRS&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>$HOME&lt;span style="color:#e6db74">/.nix-profile/share:&lt;/span>$XDG_DATA_DIRS&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After all of that you can pretty much install anything from Nixpkgs.&lt;/p>
+&lt;h3 id="further-configuration">Further Configuration&lt;/h3>
+&lt;p>With the previous steps complete you should have Nix working on your
+machine. Though Nix does offer some extra features that are not turned on out of
+the box you can enable them pretty easily.&lt;/p>
+&lt;h4 id="non-free-packages">non-free packages&lt;/h4>
+&lt;p>Nix does not allow you to install the non-free packages from its archive unless
+you explicitly tell to. there are different ways to do this depending on whether
+you want it temporally, or allowing non-free by default. adding &lt;code>{ allowUnfree = true; }&lt;/code> to you Nixpkg config (&lt;code>~/.config/nixpkgs/config.nix&lt;/code>) is the simplest
+way to add it in my experience. Though if you only need it for a temporary shell
+or a build just &lt;code>export NIXPKGS_ALLOW_UNFREE=1&lt;/code> when you need to use non-free
+software is also an option.&lt;/p>
+&lt;h4 id="experimental-features">experimental features&lt;/h4>
+&lt;p>Nix have some features that are still in the works which is why they are not on
+by default. Nix will check &lt;code>~/.config/nix/nix.conf&lt;/code> for which features you&amp;rsquo;ve
+enabled, and you probably just want &lt;code>nix-command&lt;/code> &lt;code>flakes&lt;/code> to start off with
+unless you really know what you&amp;rsquo;re doing.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-nix" data-lang="nix">&lt;span style="display:flex;">&lt;span>experimental-features &lt;span style="color:#960050;background-color:#1e0010">=&lt;/span> nix-command flakes
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Both &lt;code>~/.config/nixpkgs/config.nix&lt;/code> and &lt;code>~/.config/nix/nix.conf&lt;/code> may not be
+created by default. If that is the case, create the appropriate directory and
+files.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="basic-usage">Basic usage&lt;/h2>
+&lt;p>Now that you have a working Nix install, you can use it to easily and safely
+install tens of thousands of new packages onto your machine. For installing a
+package just find it on &lt;a href="https://search.nixos.org/packages">https://search.nixos.org/packages&lt;/a> which
+will show you the package name and some commands to install, though they
+generally look like this.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-env -iA nixpkgs.PACKAGENAME
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To uninstall packages just use &lt;code>nix-env -e&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-env -e PACKAGENAME
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="updating">Updating&lt;/h3>
+&lt;p>First Nix needs to update the channel(s) that you&amp;rsquo;ve added with &lt;code>nix-channel --update&lt;/code>, after which you can call &lt;code>nix-env -u&lt;/code> to update everything, or
+&lt;code>nix-env -u PACKAGENAME&lt;/code> to update a specific package.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --update &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> nix-env -u
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>I also recommend that you use &lt;code>nix-collect-garbage&lt;/code> when you update, as Nix
+keeps each generation of packages that you&amp;rsquo;ve installed/updated/uninstalled, so
+that there is always a working version of them to rollback to. This eats up a
+lot of space, especially if you make a lot of changes to the system in quick
+succession.&lt;/p>
+&lt;p>I usually run something like this when I update my packages.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --update &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> nix-env -u &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> nix-collect-garbage -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="broken-things">Broken Things&lt;/h2>
+&lt;p>While Nix will add tonnes of stable packages to you system with ease,
+there is one downside to this all. GUI applications are more of a crap
+shot of if they&amp;rsquo;ll work, while anything with a CLI has worked 100% of the time
+I&amp;rsquo;ve tried. This is something that I&amp;rsquo;ve still working on, so expect an update
+when I find out how to fix this. In the mean time I recommend checking if it&amp;rsquo;s
+available through &lt;a href="https://www.flatpak.org/">flatpak&lt;/a> as that&amp;rsquo;s how I usually get
+GUI apps.&lt;/p>
+&lt;h2 id="tl-dr">TL-DR&lt;/h2>
+&lt;p>Run this to install.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>sudo apt install -y nix-setup-systemd &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>sudo usermod -aG nix-users &lt;span style="color:#66d9ef">$(&lt;/span>whoami&lt;span style="color:#66d9ef">)&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>newgrp nix-users 
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then run this.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>nix-channel --update &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>newgrp -
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Add &lt;code>~/.nix-profile/bin&lt;/code> to your &lt;code>PATH&lt;/code> and &lt;code>~/.nix-profile/share&lt;/code> to
+&lt;code>XDG_DATA_DIRS&lt;/code>, use &lt;code>nix-env -iA nixpkgs.PACKAGENAME&lt;/code> to install stuff that you
+find on &lt;a href="https://search.nixos.org/packages">https://search.nixos.org/packages&lt;/a>.&lt;/p></description></item></channel></rss>
